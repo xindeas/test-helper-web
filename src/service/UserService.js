@@ -7,6 +7,9 @@ export function query () {
     return post('/user/query', {
         pageIndex: 0,
         pageSize: 10,
-        pagination: true
+        pagination: true,
+        filter: {
+            name: 'admin'
+        }
     })
 }
