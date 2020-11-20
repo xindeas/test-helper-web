@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
+import VueCookies from 'vue-cookies'
+import { refreshUserCookie } from '@/utils/cookieUtil'
 
 Vue.use(VueRouter)
 
@@ -36,11 +38,16 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   nprogress.start()
-  const user = sessionStorage.getItem('user')
+  let user = VueCookies.get('user')
   if (to.path !== '/Login' && !user) {
     next({
       path: '/Login'
     })
+    return
+  }
+  // 刷新cookie过期时间
+  if (user) {
+    refreshUserCookie(user)
   }
   next()
 })

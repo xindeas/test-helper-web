@@ -13,13 +13,13 @@
             </el-option>
           </el-select>
           <el-dropdown trigger="click">
-            <el-avatar :size="45" src="https://empty">
+            <el-avatar :size="45" :src="user.avatar">
               <img src="@/assets/pic.png"/>
             </el-avatar>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人主页</el-dropdown-item>
               <el-dropdown-item>我的周报</el-dropdown-item>
-              <el-dropdown-item divided>退出登录</el-dropdown-item>
+              <el-dropdown-item @click.native="logout" divided>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -97,12 +97,23 @@ export default {
       ]
     }
   },
-  mounted () {
+  computed: {
+    user() {
+      return this.$cookies.get('user')
+    }
+  },
+  created() {
     this.loadProject()
+  },
+  mounted () {
   },
   methods: {
     loadProject () {
       this.projectList = []
+    },
+    logout() {
+      this.$cookies.remove('user')
+      this.$router.push('Login')
     }
   }
 }

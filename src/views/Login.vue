@@ -2,7 +2,7 @@
     <div class="full-content login">
         <div class="form-content">
             <h2>登录</h2>
-            <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm">
+            <el-form :model="loginForm" :rules="rules" ref="loginForm">
                 <el-form-item prop="login">
                     <el-input v-model="loginForm.login"
                               autocomplete="off"
@@ -40,6 +40,7 @@
         Col
     } from 'element-ui'
     import { login } from '@/service/UserService.js'
+    import { refreshUserCookie } from '@/utils/cookieUtil'
     export default {
         name: 'Login',
         components: {
@@ -65,23 +66,19 @@
         },
         methods: {
             submitForm () {
-                this.loginLoading = true
                 this.$refs.loginForm.validate().then((status) => {
                     if (status) {
+                        this.loginLoading = true
                         login(this.loginForm).then(data => {
                             this.loginLoading = false
                             if (data.success) {
-                                sessionStorage.setItem('user', JSON.stringify(data.result))
+                                refreshUserCookie(data.result)
                                 this.$router.push('Home')
                             }
                         }, () => {
                             this.loginLoading = false
                         })
-                    } else {
-                        this.loginLoading = false
                     }
-                }, () => {
-                    this.loginLoading = false
                 })
             }
         }
