@@ -119,6 +119,9 @@ export default {
 }
 </script>
 <style>
+  .layout {
+    overflow: hidden;
+  }
   .layout-header {
     height: 3em;
     padding: 0;
@@ -128,6 +131,8 @@ export default {
   }
   .layout-main {
     height: calc(100% - 3em);
+    background-color: #eeeeee;
+    padding: 1em 1em 0 1em;
   }
   .layout-footer {
     height: 3em;

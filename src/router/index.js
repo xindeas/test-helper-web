@@ -15,13 +15,27 @@ const routes = [
       {
         path: '/Home',
         name: 'Home',
+        meta: {
+          title: '首页'
+        },
         component: () => import('@/views/Home')
+      },
+      {
+        path: '/Project',
+        name: 'Project',
+        meta: {
+          title: '我的项目'
+        },
+        component: () => import('@/views/Project')
       }
     ]
   },
   {
     path: '/Login',
     name: 'Login',
+    meta: {
+      title: '登录'
+    },
     component: () => import('@/views/Login')
   },
   {
@@ -38,6 +52,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   nprogress.start()
+  document.title = to.meta.title
   let user = VueCookies.get('user')
   if (to.path !== '/Login' && !user) {
     next({

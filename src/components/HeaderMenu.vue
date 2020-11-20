@@ -37,7 +37,7 @@
         },
         computed: {
             activeIndex () {
-                return 'Home'
+                return this.$route.name
             }
         }
     }

@@ -5,7 +5,7 @@
             <HeaderMenuItem :item="child" :key="index"></HeaderMenuItem>
         </template>
     </el-submenu>
-    <el-menu-item v-else :index="item.index">
+    <el-menu-item v-else :index="item.index" @click="linkTo()">
         <template slot="title">{{item.label}}</template>
     </el-menu-item>
 </template>
@@ -27,6 +27,11 @@
                 default: () => {
                     return {}
                 }
+            }
+        },
+        methods: {
+            linkTo() {
+                this.$router.push(this.item.index)
             }
         }
     }
