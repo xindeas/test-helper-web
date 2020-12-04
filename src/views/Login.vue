@@ -23,7 +23,7 @@
                     </el-col>
                 </el-row>
                 <el-row class="btn-row">
-                    <el-button class="full-btn" type="primary" @click="submitForm">登录</el-button>
+                    <el-button class="full-btn" type="primary" @click="submitForm" :loading="loginLoading">登录</el-button>
                 </el-row>
             </el-form>
         </div>
@@ -39,8 +39,8 @@
         Row,
         Col
     } from 'element-ui'
-    import { login } from '@/service/UserService.js'
-    import { refreshUserCookie } from '@/utils/cookieUtil'
+    import { login } from '../service/UserService.js'
+    import { refreshUserCookie } from '../utils/cookieUtil'
     export default {
         name: 'Login',
         components: {
@@ -90,7 +90,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: gray;
+        background-color: #43454C;
     }
     .form-content {
         display: block;
@@ -98,6 +98,9 @@
         padding: 1em;
         border-radius: .5em;
         background-color: rgba(255, 255, 255, .7);
+    }
+    .form-content h2 {
+        text-align: center;
     }
     .btn-row {
         margin-bottom: .5em;

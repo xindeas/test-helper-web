@@ -1,11 +1,11 @@
 <template>
     <el-menu
             :default-active="activeIndex"
+            :collapse="collapse"
+            unique-opened
             class="header-menu"
-            mode="horizontal"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b">
+            background-color="#43454C"
+            text-color="#fff">
         <template v-for="(item, index) of menu">
             <HeaderMenuItem :key="index" :item="item"></HeaderMenuItem>
         </template>
@@ -29,6 +29,10 @@
                 default: () => {
                     return []
                 }
+            },
+            collapse: {
+                type: Boolean,
+                default: false
             }
         },
         data () {
@@ -44,5 +48,15 @@
 </script>
 
 <style scoped>
-
+    .el-menu {
+        height: 100%;
+        position: static;
+    }
+    .header-menu {
+        height: 100%;
+        box-sizing: border-box;
+    }
+    .header-menu:not(.el-menu--collapse) {
+        width: 15em;
+    }
 </style>

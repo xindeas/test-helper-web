@@ -1,18 +1,23 @@
 <template>
   <div class="layout full-content">
     <el-container class="full-content">
-      <el-header class="layout-header">
-        <HeaderMenu :menu="menuList"/>
-        <div class="header-right-bar">
-          <el-select v-model="myProject" placeholder="请选择">
+      <el-aside width="auto">
+        <HeaderMenu :menu="menuList" :collapse="collapse"/>
+      </el-aside>
+      <el-container>
+        <el-header class="layout-header">
+          <i v-if="collapse" class="fold el-icon-s-unfold" @click="collapse = !collapse"></i>
+          <i v-else class="fold un-fold el-icon-s-unfold" @click="collapse = !collapse"></i>
+          <div class="header-blank"></div>
+          <el-select v-model="myProject" placeholder="请选择项目" size="mini">
             <el-option
                     v-for="item in projectList"
                     :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    :label="item.name"
+                    :value="item.id">
             </el-option>
           </el-select>
-          <el-dropdown trigger="click">
+          <el-dropdown trigger="hover">
             <el-avatar :size="45" :src="user.avatar">
               <img src="@/assets/pic.png"/>
             </el-avatar>
@@ -22,11 +27,11 @@
               <el-dropdown-item @click.native="logout" divided>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </div>
-      </el-header>
-      <el-container class="layout-main-footer">
+        </el-header>
         <el-main class="layout-main">
-          <router-view/>
+          <transition name="mainRouter">
+            <router-view/>
+          </transition>
         </el-main>
         <el-footer class="layout-footer">测试工具V0.0.1</el-footer>
       </el-container>
@@ -39,6 +44,7 @@
   import {
     Container,
     Header,
+    Aside,
     Main,
     Footer,
     Avatar,
@@ -48,6 +54,7 @@
     DropdownMenu,
     DropdownItem
   } from 'element-ui'
+  import { queryProject } from '../service/ProjectService'
 
 export default {
   name: 'Layout',
@@ -55,6 +62,7 @@ export default {
     HeaderMenu,
     'el-container': Container,
     'el-header': Header,
+    'el-aside': Aside,
     'el-main': Main,
     'el-footer': Footer,
     'el-avatar': Avatar,
@@ -68,30 +76,36 @@ export default {
     return {
       myProject: '',
       projectList: [],
+      collapse: false,
       menuList: [
         {
           label: '首页',
           index: 'Home',
+          icon: 'el-icon-files',
           children: []
         },
         {
           label: '我的项目',
           index: 'Project',
+          icon: 'el-icon-folder-opened',
           children: []
         },
         {
           label: '工作台',
           index: 'WorkBench',
+          icon: 'el-icon-files',
           children: []
         },
         {
           label: '缺陷管理',
           index: 'Defect',
+          icon: 'el-icon-date',
           children: []
         },
         {
           label: '测试用例',
           index: 'TestCase',
+          icon: 'el-icon-notebook-1',
           children: []
         }
       ]
@@ -109,7 +123,14 @@ export default {
   },
   methods: {
     loadProject () {
-      this.projectList = []
+      const vm = this
+      queryProject({
+        pagination: false
+      }).then(res => {
+        if (res && res.result && Array.isArray(res.result.result)) {
+          vm.projectList = res.result.result
+        }
+      })
     },
     logout() {
       this.$cookies.remove('user')
@@ -123,15 +144,37 @@ export default {
     overflow: hidden;
   }
   .layout-header {
-    height: 3em;
     padding: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
   }
-  .layout-main-footer {
-    height: calc(100% - 3em);
+  .layout-header>* {
+    cursor: pointer;
+  }
+  .layout-header .fold {
+    margin: 0 .5em;
+    font-size: 1.5em;
+    transform: rotate(0);
+    transition: all 250ms;
+  }
+  .layout-header .un-fold {
+    margin: 0 .5em;
+    font-size: 1.5em;
+    transform: rotate(180deg);
+  }
+  .layout-header .el-select {
+    margin: 0 .5em;
+  }
+  .layout-header .el-dropdown {
+    margin: 0 1em;
+  }
+  .header-blank {
+    flex: 1;
   }
   .layout-main {
     height: calc(100% - 3em);
-    background-color: #eeeeee;
     padding: 1em 1em 0 1em;
   }
   .layout-footer {
@@ -140,30 +183,23 @@ export default {
     justify-content: center;
     align-items: center;
     color: #909399;
+    padding: 0;
+    margin: 0 16px;
+    background-color: white;
   }
-  .header-menu {
-    width: calc(100% - 20em);
-    display: inline-block;
+  .mainRouter-enter-active, .mainRouter-leave-active {
+    position: absolute;
+    transition: all .5s;
   }
-  .header-right-bar {
-    width: 20em;
-    display: inline-block;
-    vertical-align: top;
-    box-sizing: border-box;
-    background-color: #545c64;
-    height: 100%;
-    text-align: right;
+  .mainRouter-enter {
+    position: absolute;
+    opacity: 0;
+    transform: translateX(100%);
   }
-  .header-right-bar:before {
-    content: '';
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
-  }
-  .header-right-bar>* {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 1em;
-    cursor: pointer;
+  .mainRouter-leave-to {
+    position: absolute;
+    opacity: 0;
+    z-index: -99;
+    transform: translateX(-100%);
   }
 </style>

@@ -3,11 +3,11 @@
 </template>
 
 <script>
-    import { query } from '@/service/UserService'
+    import { queryUser } from '../service/UserService'
     export default {
         name: 'Home',
         mounted () {
-            query()
+            queryUser()
         }
     }
 </script>

@@ -1,11 +1,13 @@
 <template>
     <el-submenu v-if="item.children && item.children.length > 0" :index="item.index">
+        <i v-if="item.icon" :class="item.icon"></i>
         <template slot="title">{{item.label}}</template>
         <template v-for="(child, index) of item.children">
             <HeaderMenuItem :item="child" :key="index"></HeaderMenuItem>
         </template>
     </el-submenu>
     <el-menu-item v-else :index="item.index" @click="linkTo()">
+        <i v-if="item.icon" :class="item.icon"></i>
         <template slot="title">{{item.label}}</template>
     </el-menu-item>
 </template>

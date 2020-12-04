@@ -1,80 +1,93 @@
 <template>
     <div class="project full-content router-view">
         <div class="page-header">我的项目</div>
-        <div class="oper-bar"></div>
-        <div class="table-content" ref="tableContent">
-            <el-table
-                    :data="tableData"
-                    stripe
-                    :max-height="tableHeight"
-                    style="width: 100%">
-                <el-table-column
-                        prop="date"
-                        label="日期"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="姓名"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="address"
-                        label="地址">
-                </el-table-column>
-            </el-table>
+        <div class="oper-bar">
+            <el-button size="mini"
+                       @click="loadTable"
+                       icon="el-icon-search">
+                查询
+            </el-button>
+            <el-button size="mini"
+                       type="primary"
+                       @click="loadTable"
+                       icon="el-icon-plus">
+                新增
+            </el-button>
+        </div>
+        <div class="table-content">
+            <BaseTable :column-items="columnItems"
+                       :table-data="tableData"
+                       :page-total="pageTotal"
+                       @loadTable="loadTable"
+                       style="height: calc(100% - 32px);"></BaseTable>
+            <el-pagination
+                    @size-change="loadTable"
+                    @current-change="loadTable"
+                    :current-page="pageIndex"
+                    :page-sizes="sizeOptions"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pageTotal">
+            </el-pagination>
         </div>
     </div>
 </template>
 
 <script>
     import {
-        Table,
-        TableColumn
+        Button,
+        Pagination
     } from 'element-ui'
+    import BaseTable from "../components/BaseTable";
+    import { queryProject } from '../service/ProjectService'
+    import {ColumnType} from "../constant/ColumnItem";
+    import BaseTablePage from "../base/BaseTablePage";
     export default {
         name: 'Project',
+        mixins: [BaseTablePage],
         components: {
-            'el-table': Table,
-            'el-table-column': TableColumn
+            'el-button': Button,
+            'el-pagination': Pagination,
+            BaseTable
         },
         data() {
             return {
-                tableHeight: 0,
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }]
+                columnItems: [
+                    {
+                        key: "name",
+                        label: "项目名"
+                    },
+                    {
+                        key: "createDate",
+                        label: "创建日期",
+                        width: "200px",
+                        type: ColumnType.DATE
+                    }
+                ]
             }
         },
         mounted() {
-            const vm = this
-            // 改变表格流体高度
-            this.$nextTick(() => {
-                vm.tableHeight =  vm.$refs.tableContent.offsetHeight
-                window.onresize = () => {
-                    vm.tableHeight =  vm.$refs.tableContent.offsetHeight
-                }
-            })
+            this.loadTable()
         },
         methods: {
+            loadTable(param) {
+                const vm = this
+                this.loading.table = true
+                queryProject({
+                    pageIndex: vm.pageIndex,
+                    pageSize: vm.pageSize,
+                    pagination: true,
+                    ...param
+                }).then(res => {
+                    vm.afterLoadTable(res);
+                })
+            },
+            handleEdit(index, row) {
+                console.log(index, row)
+            }
         }
     }
 </script>
 
 <style scoped>
-
 </style>
