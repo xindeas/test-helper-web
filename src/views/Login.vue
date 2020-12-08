@@ -39,8 +39,8 @@
         Row,
         Col
     } from 'element-ui'
-    import { login } from '../service/UserService.js'
-    import { refreshUserCookie } from '../utils/cookieUtil'
+    import { login } from '@/service/UserService.js'
+    import { refreshUserCookie } from '@/utils/cookieUtil'
     export default {
         name: 'Login',
         components: {
@@ -55,8 +55,8 @@
             return {
                 loginLoading: false,
                 loginForm: {
-                    login: '',
-                    pwd: ''
+                    login: 'admin',
+                    pwd: 'admin'
                 },
                 rules: {
                     login: [{ required: true, message: '请输入账号', trigger: 'blur' }],

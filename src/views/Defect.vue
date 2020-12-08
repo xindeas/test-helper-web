@@ -14,9 +14,9 @@
     import {
         Button
     } from 'element-ui'
-    import BaseTable from "../components/BaseTable";
-    import { queryProject } from '../service/ProjectService'
-    import {ColumnType} from "../constant/ColumnItem";
+    import BaseTable from "@/layout/components/BaseTable";
+    import { queryProject } from '@/service/ProjectService'
+    import {ColumnType} from "@/constant/ColumnItem";
     export default {
         name: 'Defect',
         components: {

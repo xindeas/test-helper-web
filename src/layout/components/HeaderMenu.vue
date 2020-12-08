@@ -6,6 +6,12 @@
             class="header-menu"
             background-color="#43454C"
             text-color="#fff">
+        <div class="menu-title primary-txt">
+            <div class="img-content">
+                <img src="@/assets/logo.png"/>
+            </div>
+            <span v-if="!collapse">测试工具</span>
+        </div>
         <template v-for="(item, index) of menu">
             <HeaderMenuItem :key="index" :item="item"></HeaderMenuItem>
         </template>
@@ -58,5 +64,31 @@
     }
     .header-menu:not(.el-menu--collapse) {
         width: 15em;
+    }
+    .menu-title {
+        height: 60px;
+        width: 100%;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    .menu-title .img-content {
+        width: 60px;
+        height: 60px;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .menu-title .img-content:after {
+        content: '';
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .menu-title .img-content img {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        vertical-align: middle;
     }
 </style>

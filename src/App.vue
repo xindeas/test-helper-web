@@ -10,13 +10,42 @@
 <script>
   export default {
     name: "App",
+    data() {
+      return {
+        // 动画方向left向左;right向右;空字符串不执行动画
+        animDir: ''
+      }
+    },
     computed: {
       enterAnim() {
-        return "from-left"
+        if (this.animDir === 'right') {
+          return "from-left"
+        }
+        else if (this.animDir === 'left') {
+          return "from-right"
+        }
+        return ""
       },
       leaveAnim() {
-        return "from-right"
+        if (this.animDir === 'right') {
+          return "from-right"
+        }
+        else if (this.animDir === 'left') {
+          return "from-left"
+        }
+        return ""
       },
+    },
+    watch: {
+      $route(to, from) {
+        this.animDir = '';
+        if (from.name === 'Login') {
+          this.animDir = 'right';
+        }
+        else if (to.name === 'Login' && from.name) {
+          this.animDir = 'left';
+        }
+      }
     }
   }
 </script>
@@ -29,6 +58,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
+    overflow: hidden;
   }
   .routerview-enter-active, .routerview-leave-active {
     position: absolute;
@@ -36,12 +66,12 @@
   }
   .from-left {
     position: absolute;
-    opacity: 0;
+    overflow: hidden;
     transform: translateX(100%);
   }
   .from-right {
     position: absolute;
-    opacity: 0;
+    overflow: hidden;
     transform: translateX(-100%);
   }
 

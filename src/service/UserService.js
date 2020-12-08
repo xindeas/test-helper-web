@@ -1,4 +1,4 @@
-import instance from '../utils/serviceUtils'
+import instance from '@/utils/serviceUtils'
 
 export function login (loginForm) {
     return instance.post('/user/login', loginForm)

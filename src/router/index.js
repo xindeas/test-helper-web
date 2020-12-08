@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
 import VueCookies from 'vue-cookies'
-import { refreshUserCookie } from '../utils/cookieUtil'
+import { refreshUserCookie } from '@/utils/cookieUtil'
 import { Message } from 'element-ui';
 
 Vue.use(VueRouter)
@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/Layout',
     name: 'Layout',
-    component: () => import('@/views/Layout'),
+    component: () => import('@/layout/index'),
     children: [
       {
         path: '/Home',

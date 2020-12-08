@@ -3,15 +3,31 @@
         <div class="page-header">我的项目</div>
         <div class="oper-bar">
             <el-button size="mini"
+                       plain
                        @click="loadTable"
                        icon="el-icon-search">
                 查询
             </el-button>
             <el-button size="mini"
                        type="primary"
+                       plain
                        @click="loadTable"
                        icon="el-icon-plus">
                 新增
+            </el-button>
+            <el-button size="mini"
+                       type="primary"
+                       plain
+                       @click="loadTable"
+                       icon="el-icon-check">
+                启用
+            </el-button>
+            <el-button size="mini"
+                       type="danger"
+                       plain
+                       @click="loadTable"
+                       icon="el-icon-close">
+                禁用
             </el-button>
         </div>
         <div class="table-content">
@@ -38,10 +54,10 @@
         Button,
         Pagination
     } from 'element-ui'
-    import BaseTable from "../components/BaseTable";
-    import { queryProject } from '../service/ProjectService'
-    import {ColumnType} from "../constant/ColumnItem";
-    import BaseTablePage from "../base/BaseTablePage";
+    import BaseTable from "@/layout/components/BaseTable";
+    import { queryProject } from '@/service/ProjectService'
+    import {ColumnType} from "@/constant/ColumnItem";
+    import BaseTablePage from "@/base/BaseTablePage";
     export default {
         name: 'Project',
         mixins: [BaseTablePage],
@@ -56,6 +72,15 @@
                     {
                         key: "name",
                         label: "项目名"
+                    },
+                    {
+                        key: "enabled",
+                        label: "启用状态",
+                        type: ColumnType.BOOLEAN,
+                        enumObj: {
+                            true: "启用",
+                            false: "禁用"
+                        }
                     },
                     {
                         key: "createDate",

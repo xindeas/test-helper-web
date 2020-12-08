@@ -25,7 +25,7 @@
         Table,
         TableColumn
     } from 'element-ui'
-    import {ColumnType} from "../constant/ColumnItem";
+    import {ColumnType} from "@/constant/ColumnItem";
     import * as moment from "moment";
     export default {
         name: 'BaseTable',
@@ -71,6 +71,12 @@
             getContent(columnItem, value) {
                 if (columnItem.type === ColumnType.DATE) {
                     return moment(value).format("YYYY-MM-DD HH:mm:ss");
+                }
+                else if (columnItem.type === ColumnType.BOOLEAN) {
+                    if (columnItem.enumObj) {
+                        return columnItem.enumObj[value];
+                    }
+                    return value;
                 }
                 else {
                     return value;

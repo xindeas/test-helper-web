@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import { queryUser } from '../service/UserService'
+    import { queryUser } from '@/service/UserService'
     export default {
         name: 'Home',
         mounted () {
