@@ -30,3 +30,15 @@
 .primary-txt {
     color: #409EFF;
 }
+.success-txt {
+    color: #67C23A;
+}
+.warning-txt {
+    color: #E6A23C;
+}
+.danger-txt {
+    color: #F56C6C;
+}
+.info-txt {
+    color: #909399;
+}

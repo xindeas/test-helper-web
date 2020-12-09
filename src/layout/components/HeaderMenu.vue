@@ -6,7 +6,7 @@
             class="header-menu"
             background-color="#43454C"
             text-color="#fff">
-        <div class="menu-title primary-txt">
+        <div class="menu-title primary-txt" @click="goHome">
             <div class="img-content">
                 <img src="@/assets/logo.png"/>
             </div>
@@ -48,6 +48,11 @@
         computed: {
             activeIndex () {
                 return this.$route.name
+            }
+        },
+        methods: {
+            goHome() {
+                this.$router.push('Home')
             }
         }
     }

@@ -1,5 +1,9 @@
+import BaseTable from "@/layout/components/BaseTable";
 export default {
     name: "BaseTablePage",
+    components: {
+        BaseTable
+    },
     data() {
         return {
             tableData: [],
@@ -7,12 +11,14 @@ export default {
             pageSize: 10,
             pageTotal: 0,
             loading: {
-                table: false
+                table: false,
+                button: false,
             },
             sizeOptions: [10, 100, 200, 300]
         }
     },
     methods: {
+        loadTable() {},
         afterLoadTable(res) {
             this.loading.table = false
             if (res && res.result) {
@@ -20,6 +26,34 @@ export default {
                 if (Array.isArray(res.result.result)) {
                     this.tableData = res.result.result
                 }
+            }
+        },
+        afterEnabled(res) {
+            this.loading.button = false
+            const l = res.filter(item => item.success).length
+            if (l > 0) {
+                this.$message.success(l + '条数据启用成功')
+            }
+            this.loadTable();
+        },
+        afterDisabled(res) {
+            this.loading.button = false
+            const l = res.filter(item => item.success).length
+            if (l > 0) {
+                this.$message.success(l + '条数据禁用成功')
+            }
+            this.loadTable();
+        },
+        add(name, id) {
+            if (id) {
+                this.$router.push(name, {
+                    params: {
+                        id
+                    }
+                });
+            }
+            else {
+                this.$router.push(name);
             }
         }
     }

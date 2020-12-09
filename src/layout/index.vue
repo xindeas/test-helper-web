@@ -9,7 +9,7 @@
                     <i v-if="collapse" class="fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <i v-else class="fold un-fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <div class="header-blank"></div>
-                    <el-select v-model="myProject" placeholder="请选择项目" size="mini">
+                    <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject">
                         <el-option
                                 v-for="item in projectList"
                                 :key="item.value"
@@ -29,9 +29,24 @@
                     </el-dropdown>
                 </el-header>
                 <el-main class="layout-main">
-                    <transition name="mainRouter">
-                        <router-view/>
-                    </transition>
+                    <div class="tabs-bar">
+                        <template v-for="(item, index) of curTabs">
+                            <div :class="{'tab-item': true, 'current': item.name === curRoute.name}"
+                                 :key="index"
+                                 @click="jumpTo(item.name)">
+                                {{item.meta.title}}
+                                <i class="el-icon-close"
+                                   @click.stop="closeTab(item.name)"></i>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="router-content">
+                        <transition name="mainRouter">
+                            <keep-alive :include="curTabsName">
+                                <router-view/>
+                            </keep-alive>
+                        </transition>
+                    </div>
                 </el-main>
                 <el-footer class="layout-footer">测试工具V0.0.1</el-footer>
             </el-container>
@@ -54,7 +69,8 @@
         DropdownMenu,
         DropdownItem
     } from 'element-ui'
-    import { queryProject } from '@/service/ProjectService'
+    import { queryProjectForOptions } from '@/service/ProjectService'
+    import PubSub from "pubsub-js"
 
     export default {
         name: 'Layout',
@@ -74,6 +90,7 @@
         },
         data () {
             return {
+                subscriber: "",
                 myProject: '',
                 projectList: [],
                 collapse: false,
@@ -108,31 +125,60 @@
         computed: {
             user() {
                 return this.$cookies.get('user')
+            },
+            curTabs() {
+                return this.$store.state.router.curTabs;
+            },
+            curTabsName() {
+                return this.$store.state.router.curTabs.map(item => item.name);
+            },
+            curRoute() {
+                return this.$route
             }
         },
         created() {
             this.loadProject()
         },
         mounted () {
+            // 添加订阅
+            this.subscriber = PubSub.subscribe("flushProject", this.loadProject)
         },
         methods: {
             loadProject () {
                 const vm = this
-                queryProject({
-                    pagination: false,
-                    filter: {
-                        enabled: true
-                    }
+                queryProjectForOptions({
+                    userId: vm.user.id
                 }).then(res => {
-                    if (res && res.result && Array.isArray(res.result.result)) {
-                        vm.projectList = res.result.result
+                    if (res && res.result && Array.isArray(res.result)) {
+                        vm.projectList = res.result
                     }
                 })
             },
             logout() {
                 this.$cookies.remove('user')
                 this.$router.push('Login')
+            },
+            // 切换项目
+            changeCurProject(val) {
+                const project = this.projectList.find(item => item.id === val);
+                this.$store.commit("project/setCurProject", project)
+            },
+            jumpTo(name) {
+                this.$router.push(name)
+            },
+            closeTab(name) {
+                const arr = this.curTabs.filter(item => item.name !== name);
+                this.$store.commit('router/setCurTabs', arr);
+                if (name === this.curRoute.name && arr.length > 0) {
+                    this.$router.push(arr[arr.length - 1].name);
+                } else if (name === this.curRoute.name && arr.length > 0) {
+                    this.$router.push("/Home");
+                }
             }
+        },
+        destroyed() {
+            // 取消订阅
+            PubSub.unsubscribe(this.subscriber);
         }
     }
 </script>
@@ -174,8 +220,50 @@
         flex: 1;
     }
     .layout-main {
-        height: calc(100% - 3em);
+        height: 100%;
         padding: 0 1em 0 1em;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .layout-main .tabs-bar {
+        height: 2.5rem;
+        background-color: #f5f7fa;
+        border: 1px solid #dcdfe6;
+        box-sizing: border-box;
+    }
+    .layout-main .tabs-bar .tab-item {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        background-color: #f5f7fa;
+        cursor: pointer;
+        padding: 0 1rem;
+        font-size: .7em;
+        border-bottom: 1px solid #dcdfe6;
+    }
+    .layout-main .tabs-bar .tab-item.current {
+        background-color: white;
+        border-left: 1px solid #dcdfe6;
+        border-right: 1px solid #dcdfe6;
+        border-bottom: 1px solid transparent;
+    }
+    .layout-main .tabs-bar .tab-item:after {
+        content: '';
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .layout-main .tabs-bar .el-icon-close {
+        transition: all 250ms;
+        font-size: 1.2em;
+    }
+    .layout-main .tabs-bar .el-icon-close:hover {
+        transform: rotate(180deg);
+    }
+    .layout-main .router-content {
+        overflow: auto;
+        box-sizing: border-box;
+        height: calc(100% - 2.5rem);
     }
     .layout-footer {
         height: 3em;

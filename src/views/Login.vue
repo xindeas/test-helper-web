@@ -18,7 +18,7 @@
                 </el-form-item>
                 <el-row class="btn-row">
                     <el-col :span="12" style="text-align: left;">
-                        <el-button style="height: 0;" type="text" @click="submitForm">注册</el-button>
+                        <el-button style="height: 0;" type="text" @click.native="regist">注册</el-button>
                         <el-button style="height: 0;" type="text" @click="submitForm">忘记密码？</el-button>
                     </el-col>
                 </el-row>
@@ -80,6 +80,9 @@
                         })
                     }
                 })
+            },
+            regist() {
+                console.log('注册');
             }
         }
     }

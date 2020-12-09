@@ -8,5 +8,6 @@ export const ColumnItem = {
 export const ColumnType = {
     TEXT: "TEXT",
     DATE: "DATE",
-    BOOLEAN: "BOOLEAN"
+    BOOLEAN: "BOOLEAN",
+    PIC: "PIC"
 }

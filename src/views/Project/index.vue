@@ -4,6 +4,7 @@
         <div class="oper-bar">
             <el-button size="mini"
                        plain
+                       :loading="loading.button"
                        @click="loadTable"
                        icon="el-icon-search">
                 查询
@@ -11,29 +12,35 @@
             <el-button size="mini"
                        type="primary"
                        plain
-                       @click="loadTable"
+                       :loading="loading.button"
+                       @click="add('/ProjectUpdate')"
                        icon="el-icon-plus">
                 新增
             </el-button>
             <el-button size="mini"
                        type="primary"
                        plain
-                       @click="loadTable"
+                       :loading="loading.button"
+                       @click="enabled"
                        icon="el-icon-check">
                 启用
             </el-button>
             <el-button size="mini"
                        type="danger"
                        plain
-                       @click="loadTable"
+                       :loading="loading.button"
+                       @click="disabled"
                        icon="el-icon-close">
                 禁用
             </el-button>
         </div>
         <div class="table-content">
-            <BaseTable :column-items="columnItems"
+            <BaseTable ref="baseTable"
+                       :column-items="columnItems"
                        :table-data="tableData"
                        :page-total="pageTotal"
+                       :table-loading="loading.table"
+                       show-check-box
                        @loadTable="loadTable"
                        style="height: calc(100% - 32px);"></BaseTable>
             <el-pagination
@@ -54,17 +61,17 @@
         Button,
         Pagination
     } from 'element-ui'
-    import BaseTable from "@/layout/components/BaseTable";
-    import { queryProject } from '@/service/ProjectService'
-    import {ColumnType} from "@/constant/ColumnItem";
     import BaseTablePage from "@/base/BaseTablePage";
+    import { queryProject, enableProject, disableProject } from '@/service/ProjectService'
+    import {ColumnType} from "@/constant/ColumnItem";
+    import {EnableStatus} from "@/constant/StatusIcon";
+    import PubSub from "pubsub-js"
     export default {
         name: 'Project',
         mixins: [BaseTablePage],
         components: {
             'el-button': Button,
-            'el-pagination': Pagination,
-            BaseTable
+            'el-pagination': Pagination
         },
         data() {
             return {
@@ -77,10 +84,7 @@
                         key: "enabled",
                         label: "启用状态",
                         type: ColumnType.BOOLEAN,
-                        enumObj: {
-                            true: "启用",
-                            false: "禁用"
-                        }
+                        enumObj: EnableStatus
                     },
                     {
                         key: "createDate",
@@ -105,10 +109,44 @@
                     ...param
                 }).then(res => {
                     vm.afterLoadTable(res);
+                }, () => {
+                    vm.loading.table = false
                 })
             },
             handleEdit(index, row) {
                 console.log(index, row)
+            },
+            enabled() {
+                const vm = this;
+                const arr = this.$refs.baseTable.selection;
+                if (!arr || arr <= 0) {
+                    this.$message.error('请选择至少一条数据');
+                    return;
+                }
+                vm.loading.button = true
+                const idArr = arr.map(item => item.id);
+                enableProject(idArr).then(res => {
+                    vm.afterEnabled(res);
+                    PubSub.publish("flushProject")
+                }, () => {
+                    vm.loading.button = false
+                })
+            },
+            disabled() {
+                const vm = this;
+                const arr = this.$refs.baseTable.selection;
+                if (!arr || arr <= 0) {
+                    this.$message.error('请选择至少一条数据');
+                    return;
+                }
+                vm.loading.button = true
+                const idArr = arr.map(item => item.id);
+                disableProject(idArr).then(res => {
+                    vm.afterDisabled(res);
+                    PubSub.publish("flushProject")
+                }, () => {
+                    vm.loading.button = false
+                })
             }
         }
     }
