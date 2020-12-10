@@ -11,6 +11,9 @@ export function queryProjectForOptions (param) {
 export function addProject (project) {
     return instance.post('/project/add', project)
 }
+export function loadProject (id) {
+    return instance.get('/project/load/' + id)
+}
 export function deleteProject (ids) {
     return Promise.all(ids.map(id => {
         return instance.delete('/project/delete/' + id)

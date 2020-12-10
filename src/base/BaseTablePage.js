@@ -44,17 +44,14 @@ export default {
             }
             this.loadTable();
         },
-        add(name, id) {
-            if (id) {
-                this.$router.push(name, {
-                    params: {
-                        id
-                    }
-                });
-            }
-            else {
-                this.$router.push(name);
-            }
+        edit(name, title, params) {
+            this.$router.push({
+                meta: {
+                    title
+                },
+                name,
+                params
+            });
         }
     }
 }

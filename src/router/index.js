@@ -106,6 +106,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to);
   nprogress.start()
   document.title = to.meta.title
   const user = VueCookies.get('user')

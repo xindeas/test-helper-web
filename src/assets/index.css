@@ -27,6 +27,17 @@
     background-color: white;
     box-sizing: border-box;
 }
+/*重写element样式*/
+.el-table-column--selection .cell {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+}
+.el-tabs--left .el-tabs__content {
+    height: 100%;
+}
+.el-tabs--left .el-tabs__content .el-tab-pane{
+    height: 100%;
+}
 .primary-txt {
     color: #409EFF;
 }

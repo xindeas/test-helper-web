@@ -13,7 +13,7 @@
                        type="primary"
                        plain
                        :loading="loading.button"
-                       @click="add('/ProjectUpdate')"
+                       @click="edit('ProjectUpdate', '新增项目')"
                        icon="el-icon-plus">
                 新增
             </el-button>
@@ -42,7 +42,13 @@
                        :table-loading="loading.table"
                        show-check-box
                        @loadTable="loadTable"
-                       style="height: calc(100% - 32px);"></BaseTable>
+                       style="height: calc(100% - 32px);">
+                <template slot="editBtn" slot-scope="scope">
+                    <el-button size="mini"
+                               icon="el-icon-edit"
+                               @click="handleEdit(scope)">编辑</el-button>
+                </template>
+            </BaseTable>
             <el-pagination
                     @size-change="loadTable"
                     @current-change="loadTable"
@@ -113,8 +119,10 @@
                     vm.loading.table = false
                 })
             },
-            handleEdit(index, row) {
-                console.log(index, row)
+            handleEdit(scope) {
+                this.edit('ProjectUpdate', '编辑项目', {
+                    id: scope.row.id
+                });
             },
             enabled() {
                 const vm = this;

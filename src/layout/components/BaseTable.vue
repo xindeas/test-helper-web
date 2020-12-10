@@ -24,6 +24,11 @@
                     </template>
                 </el-table-column>
             </template>
+            <el-table-column fixed="right" v-if="this.$scopedSlots.editBtn">
+                <template slot-scope="scope">
+                    <slot name="editBtn" :index="scope.$index" :row="scope.row"></slot>
+                </template>
+            </el-table-column>
         </el-table>
     </div>
 </template>

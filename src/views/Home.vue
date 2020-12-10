@@ -3,11 +3,9 @@
 </template>
 
 <script>
-    import { queryUser } from '@/service/UserService'
     export default {
         name: 'Home',
         mounted () {
-            queryUser()
         }
     }
 </script>

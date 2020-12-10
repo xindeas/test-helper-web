@@ -62,7 +62,7 @@
   }
   .routerview-enter-active, .routerview-leave-active {
     position: absolute;
-    transition: all .5s;
+    transition: all 250ms;
   }
   .from-left {
     position: absolute;

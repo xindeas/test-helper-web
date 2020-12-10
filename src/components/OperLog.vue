@@ -1,8 +1,5 @@
 <template>
-    <el-dialog
-            :title="title"
-            :visible.sync="visibleChild"
-            width="50%">
+    <div class="project full-content router-view">
         <div class="table-content">
             <BaseTable ref="baseTable"
                        :column-items="columnItems"
@@ -22,45 +19,27 @@
                     :total="pageTotal">
             </el-pagination>
         </div>
-        <template slot="footer" class="dialog-footer">
-            <el-button @click="visibleChild = false" size="mini">取 消</el-button>
-            <el-button type="primary" @click="confirmAdd" size="mini">确 定</el-button>
-        </template>
-    </el-dialog>
+    </div>
 </template>
 
 <script>
-    import {
-        Dialog,
-        Button,
-        Pagination
-    } from "element-ui";
     import BaseTablePage from "@/base/BaseTablePage";
-    import {queryUser} from "@/service/UserService";
+    import {Pagination} from "element-ui";
     import {ColumnType} from "@/constant/ColumnItem";
+    import {queryLog} from "@/service/LogService";
 
     export default {
-        name: "SelectUser",
+        name: "OperLog",
         mixins: [BaseTablePage],
         components: {
-            'el-dialog': Dialog,
-            'el-button': Button,
             'el-pagination': Pagination
         },
         props: {
-            title: {
+            targetTb: {
                 type: String,
-                default: "选择用户"
             },
-            visible: {
-                type: Boolean,
-                default: false
-            },
-            selectedUserId: {
-                type: Array,
-                default: () => {
-                    return []
-                }
+            targetId: {
+                type: [String, Number],
             }
         },
         data() {
@@ -96,33 +75,23 @@
                 ],
             }
         },
-        computed: {
-            visibleChild: {
-                get() {
-                    return this.visible;
-                },
-                set(val) {
-                    this.$emit("cancel", val);
-                }
-            }
+        mounted() {
+            this.loadTable();
         },
-        watch: {
-            visibleChild(val) {
-                if (val) {
-                    this.loadTable();
-                }
-            }
+        activated() {
+            this.loadTable();
         },
         methods: {
             loadTable() {
                 const vm = this
                 this.loading.table = true
-                queryUser({
+                queryLog({
                     pageIndex: vm.pageIndex,
                     pageSize: vm.pageSize,
                     pagination: true,
                     filter: {
-                        idNotIn: vm.selectedUserId
+                        targetTb: this.targetTb,
+                        targetId: this.targetId
                     }
                 }).then(res => {
                     vm.afterLoadTable(res);
@@ -130,16 +99,12 @@
                     vm.loading.table = false
                 })
             },
-            confirmAdd() {
-                const arr = this.$refs.baseTable.selection || [];
-                this.$emit("confirmAdd", arr)
-            }
         }
     }
 </script>
 
 <style scoped>
 .table-content {
-    height: 40vh;
+    height: 100%;
 }
 </style>
