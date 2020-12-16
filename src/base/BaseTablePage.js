@@ -1,4 +1,5 @@
 import BaseTable from "@/layout/components/BaseTable";
+
 export default {
     name: "BaseTablePage",
     components: {
@@ -18,7 +19,8 @@ export default {
         }
     },
     methods: {
-        loadTable() {},
+        loadTable() {
+        },
         afterLoadTable(res) {
             this.loading.table = false
             if (res && res.result) {
@@ -40,16 +42,49 @@ export default {
             this.loading.button = false
             const l = res.filter(item => item.success).length
             if (l > 0) {
-                this.$message.success(l + '条数据禁用成功')
+                this.$message.info(l + '条数据禁用成功')
             }
             this.loadTable();
         },
-        edit(name, title, params) {
+        add(title, url, params) {
+            this.$router.selfAdd(
+                {
+                    path: '/' + this.$options.name + 'Add',
+                    name: this.$options.name + 'Add',
+                    meta: {
+                        title
+                    },
+                    component: {
+                        components: {
+                          com: () => import('@/views/' + url)
+                        },
+                        name: this.$options.name + 'Add',
+                        render: h => h('com')
+                    }
+                })
             this.$router.push({
-                meta: {
-                    title
-                },
-                name,
+                name: this.$options.name + 'Add',
+                params
+            });
+        },
+        edit(title, url, params) {
+            this.$router.selfAdd(
+                {
+                    path: '/' + this.$options.name + 'Edit',
+                    name: this.$options.name + 'Edit',
+                    meta: {
+                        title
+                    },
+                    component: {
+                        components: {
+                            com: () => import('@/views/' + url)
+                        },
+                        name: this.$options.name + 'Edit',
+                        render: h => h('com')
+                    }
+                })
+            this.$router.push({
+                name: this.$options.name + 'Edit',
                 params
             });
         }

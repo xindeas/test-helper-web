@@ -147,16 +147,7 @@
                     }
                 })
                 this.authData = this.authData.concat(arr);
-            },
-            afterLoadTable(res) {
-                this.loading.table = false
-                if (res && res.result) {
-                    this.pageTotal = res.result.totalCount;
-                    if (Array.isArray(res.result.result)) {
-                        this.authData = res.result.result
-                    }
-                }
-            },
+            }
         }
     }
 </script>

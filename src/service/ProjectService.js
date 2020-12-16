@@ -11,6 +11,9 @@ export function queryProjectForOptions (param) {
 export function addProject (project) {
     return instance.post('/project/add', project)
 }
+export function saveProject (project) {
+    return instance.post('/project/save', project)
+}
 export function loadProject (id) {
     return instance.get('/project/load/' + id)
 }

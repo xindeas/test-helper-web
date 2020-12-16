@@ -32,7 +32,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="操作记录" name="operLog" v-if="form.id">
                     <el-row class="full-content" v-if="curTab === 'operLog'">
-                        <OperLog targetTb="targetTb" targetId="targetId"></OperLog>
+                        <OperLog targetTb="tb_project" :targetId="form.id"></OperLog>
                     </el-row>
                 </el-tab-pane>
             </el-tabs>
@@ -53,9 +53,9 @@
     } from 'element-ui'
     import ProjectAuth from '@/components/ProjectAuth'
     import OperLog from '@/components/OperLog'
-    import {loadProject} from '@/service/ProjectService'
+    import {loadProject, addProject, saveProject} from '@/service/ProjectService'
     export default {
-        name: "ProjectUpdate",
+        // name: "ProjectUpdate",
         components: {
             'el-form': Form,
             'el-form-item': FormItem,
@@ -76,7 +76,12 @@
                 form: {
                     id: "",
                     name: "",
-                    belongsTo: ""
+                    belongsTo: "",
+                    enabled: "",
+                    createDate: "",
+                    createBy: "",
+                    modifyDate: "",
+                    modifyBy: ""
                 },
                 rules: {
                     name: [
@@ -86,20 +91,69 @@
                 }
             }
         },
+        computed: {
+            user() {
+                return this.$cookies.get('user')
+            },
+        },
         mounted() {
-            if (this.$route.params && this.$route.params.id) {
-                this.load(this.$route.params.id);
+            if (this.$route.params &&
+                this.$route.params.id &&
+                this.form.id !== this.$route.params.id) {
+                this.form.id = this.$route.params.id;
+                this.load(this.form.id);
+            }
+        },
+        activated() {
+            if (this.$route.params &&
+                this.$route.params.id &&
+                this.form.id !== this.$route.params.id) {
+                this.form.id = this.$route.params.id;
+                this.load(this.form.id);
             }
         },
         methods: {
             save() {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        console.log('成功');
+                        const project = this.initData();
+                        if (this.form.id) {
+                            saveProject(project).then(res => {
+                                if (res.success) {
+                                    this.$message.success('保存成功');
+                                }
+                            });
+                        }
+                        else {
+                            addProject(project).then(res => {
+                                if (res.success) {
+                                    this.$message.success('保存成功');
+                                }
+                            });
+                        }
                     } else {
                         this.$message.error('表单验证失败');
                     }
                 })
+            },
+            initData() {
+                let belongsTo = this.form.belongsTo;
+                if (!this.form.id) {
+                    belongsTo = this.user.id;
+                }
+                return {
+                    project: {
+                        id: this.form.id,
+                        name: this.form.name,
+                        belongsTo,
+                        enabled: this.form.enabled,
+                        createDate: this.form.createDate,
+                        createBy: this.form.createBy,
+                        modifyDate: this.form.modifyDate,
+                        modifyBy: this.form.modifyBy
+                    },
+                    auths: this.auths
+                }
             },
             setAuth(auths) {
                 this.auths = auths;

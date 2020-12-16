@@ -13,7 +13,7 @@
                        type="primary"
                        plain
                        :loading="loading.button"
-                       @click="edit('ProjectUpdate', '新增项目')"
+                       @click="handleAdd"
                        icon="el-icon-plus">
                 新增
             </el-button>
@@ -97,11 +97,21 @@
                         label: "创建日期",
                         width: "200px",
                         type: ColumnType.DATE
-                    }
-                ]
+                    },
+                    {
+                        key: "modifyDate",
+                        label: "修改日期",
+                        width: "200px",
+                        type: ColumnType.DATE
+                    },
+                ],
+                editUrl: 'Project/update'
             }
         },
         mounted() {
+            this.loadTable()
+        },
+        activated() {
             this.loadTable()
         },
         methods: {
@@ -112,15 +122,22 @@
                     pageIndex: vm.pageIndex,
                     pageSize: vm.pageSize,
                     pagination: true,
-                    ...param
+                    ...param,
+                    sorts: [{
+                        column: 'createDate',
+                        order: 'DESC'
+                    }]
                 }).then(res => {
                     vm.afterLoadTable(res);
                 }, () => {
                     vm.loading.table = false
                 })
             },
+            handleAdd() {
+                this.add('新增项目', this.editUrl);
+            },
             handleEdit(scope) {
-                this.edit('ProjectUpdate', '编辑项目', {
+                this.edit('编辑项目', this.editUrl, {
                     id: scope.row.id
                 });
             },

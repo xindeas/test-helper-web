@@ -32,14 +32,6 @@ const routes = [
         component: () => import('@/views/Project/index')
       },
       {
-        path: '/ProjectUpdate',
-        name: 'ProjectUpdate',
-        meta: {
-          title: '新增项目'
-        },
-        component: () => import('@/views/Project/update')
-      },
-      {
         path: '/WorkBench',
         name: 'WorkBench',
         meta: {
@@ -61,7 +53,12 @@ const routes = [
         meta: {
           title: '测试用例'
         },
-        component: () => import('@/views/TestCase/index')
+        // component: () => import('@/views/TestCase/index')
+        component: {
+          render: (h) => {
+            return h('div', '123')
+          }
+        }
       },
       {
         path: '/User',
@@ -94,8 +91,20 @@ const routes = [
     component: () => import('@/views/Login')
   },
   {
+    path: '/Error',
+    name: 'Error',
+    meta: {
+      title: '404'
+    },
+    component: () => import('@/views/Error')
+  },
+  {
     path: '/',
     redirect: '/Layout'
+  },
+  {
+    path: '*',
+    redirect: '/Error'
   },
 ]
 
@@ -104,9 +113,19 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+router.selfAdd = (params) => {
+  const existIndex = router.options.routes[0].children.findIndex(item => item.name === params.name)
+  if (existIndex < 0) {
+    router.options.routes[0].children.push(params);
+    router.matcher = new VueRouter().matcher;
+    router.addRoutes(router.options.routes)
+  } else {
+    router.options.routes[0].children.splice(existIndex, 1, params);
+    router.matcher = new VueRouter().matcher;
+    router.addRoutes(router.options.routes)
+  }
+}
 router.beforeEach((to, from, next) => {
-  console.log(to);
   nprogress.start()
   document.title = to.meta.title
   const user = VueCookies.get('user')

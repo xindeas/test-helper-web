@@ -33,7 +33,7 @@
                         <template v-for="(item, index) of curTabs">
                             <div :class="{'tab-item': true, 'current': item.name === curRoute.name}"
                                  :key="index"
-                                 @click="jumpTo(item.name)">
+                                 @click="jumpTo(item)">
                                 {{item.meta.title}}
                                 <i class="el-icon-close"
                                    @click.stop="closeTab(item.name)"></i>
@@ -163,8 +163,11 @@
                 const project = this.projectList.find(item => item.id === val);
                 this.$store.commit("project/setCurProject", project)
             },
-            jumpTo(name) {
-                this.$router.push(name)
+            jumpTo(item) {
+                if (item.path === this.curRoute.path) {
+                    return;
+                }
+                this.$router.push(item)
             },
             closeTab(name) {
                 const arr = this.curTabs.filter(item => item.name !== name);

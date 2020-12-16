@@ -46,29 +46,17 @@
             return {
                 columnItems: [
                     {
-                        key: "avatar",
-                        label: "头像",
-                        type: ColumnType.PIC
+                        key: "remark",
+                        label: "描述",
+                        width: "500px"
                     },
                     {
-                        key: "name",
-                        label: "用户名"
-                    },
-                    {
-                        key: "login",
-                        label: "账号"
-                    },
-                    {
-                        key: "mobile",
-                        label: "手机号"
-                    },
-                    {
-                        key: "email",
-                        label: "邮箱"
+                        key: "createBy",
+                        label: "操作人",
                     },
                     {
                         key: "createDate",
-                        label: "创建日期",
+                        label: "操作日期",
                         width: "200px",
                         type: ColumnType.DATE
                     }
@@ -92,7 +80,11 @@
                     filter: {
                         targetTb: this.targetTb,
                         targetId: this.targetId
-                    }
+                    },
+                    sorts: [{
+                        column: 'createDate',
+                        order: 'DESC'
+                    }]
                 }).then(res => {
                     vm.afterLoadTable(res);
                 }, () => {
