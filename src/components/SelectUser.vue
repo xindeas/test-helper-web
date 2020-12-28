@@ -106,12 +106,8 @@
                 }
             }
         },
-        watch: {
-            visibleChild(val) {
-                if (val) {
-                    this.loadTable();
-                }
-            }
+        mounted() {
+            this.loadTable();
         },
         methods: {
             loadTable() {

@@ -39,7 +39,7 @@
     watch: {
       $route(to, from) {
         this.animDir = '';
-        if (from.name === 'Login') {
+        if (from.name === 'Login' || from.name === 'Error') {
           this.animDir = 'right';
         }
         else if (to.name === 'Login' && from.name) {

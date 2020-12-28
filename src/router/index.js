@@ -32,6 +32,14 @@ const routes = [
         component: () => import('@/views/Project/index')
       },
       {
+        path: '/Module',
+        name: 'Module',
+        meta: {
+          title: '模块'
+        },
+        component: () => import('@/views/Module/index')
+      },
+      {
         path: '/WorkBench',
         name: 'WorkBench',
         meta: {
@@ -53,12 +61,12 @@ const routes = [
         meta: {
           title: '测试用例'
         },
-        // component: () => import('@/views/TestCase/index')
-        component: {
-          render: (h) => {
-            return h('div', '123')
-          }
-        }
+        component: () => import('@/views/TestCase/index')
+        // component: {
+        //   render: (h) => {
+        //     return h('div', '123')
+        //   }
+        // }
       },
       {
         path: '/User',
@@ -66,7 +74,7 @@ const routes = [
         meta: {
           title: '用户管理'
         },
-        component: () => import('@/views/TestCase/index')
+        component: () => import('@/views/User/index')
       },
       {
         path: '/Test',

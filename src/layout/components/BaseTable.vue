@@ -16,11 +16,10 @@
             <template v-for="(item, index) of columnItems">
                 <el-table-column
                         :key="index"
-                        :prop="item.key"
                         :label="item.label"
                         :width="item.width || '180px'">
                     <template slot-scope="scope">
-                        <div v-html="getContent(item, scope.row[item.key])"></div>
+                        <div v-html="getContent(item, scope.row, item.key)"></div>
                     </template>
                 </el-table-column>
             </template>
@@ -89,7 +88,7 @@
             const vm = this
             // 改变表格流体高度
             this.$nextTick(() => {
-                vm.tableHeight =  vm.$refs.tableContent.offsetHeight
+                vm.resize();
                 window.addEventListener('resize', vm.resize, false)
             })
         },
@@ -101,7 +100,7 @@
             const vm = this
             // 改变表格流体高度
             this.$nextTick(() => {
-                vm.tableHeight =  vm.$refs.tableContent.offsetHeight
+                vm.resize();
                 window.addEventListener('resize', vm.resize, false)
             })
         },
@@ -128,7 +127,16 @@
              * @param value 值
              * @returns {string|*} 返回结果
              */
-            getContent(columnItem, value) {
+            getContent(columnItem, row, key) {
+                let value = "";
+                if (Array.isArray(key) && key.length > 0) {
+                    value = row;
+                    for (const singleKey of key) {
+                        value = value[singleKey];
+                    }
+                } else {
+                    value = row[key];
+                }
                 if (columnItem.type === ColumnType.DATE) {
                     return moment(value).format("YYYY-MM-DD HH:mm:ss");
                 }

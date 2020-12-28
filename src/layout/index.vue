@@ -36,6 +36,7 @@
                                  @click="jumpTo(item)">
                                 {{item.meta.title}}
                                 <i class="el-icon-close"
+                                   v-if="curTabs.length > 1 || item.name !== 'Home'"
                                    @click.stop="closeTab(item.name)"></i>
                             </div>
                         </template>
@@ -70,6 +71,7 @@
         DropdownItem
     } from 'element-ui'
     import { queryProjectForOptions } from '@/service/ProjectService'
+    import { logout } from '@/service/UserService'
     import PubSub from "pubsub-js"
 
     export default {
@@ -91,15 +93,27 @@
         data () {
             return {
                 subscriber: "",
+                closeTabScriber: "",
                 myProject: '',
                 projectList: [],
                 collapse: false,
                 menuList: [
                     {
-                        label: '我的项目',
+                        label: '项目',
                         index: 'Project',
                         icon: 'el-icon-folder-opened',
-                        children: []
+                        children: [
+                            {
+                                label: '我的项目',
+                                index: 'Project',
+                                icon: 'el-icon-folder-opened',
+                            },
+                            {
+                                label: '模块',
+                                index: 'Module',
+                                icon: 'el-icon-s-grid',
+                            },
+                        ]
                     },
                     {
                         label: '工作台',
@@ -117,6 +131,12 @@
                         label: '测试用例',
                         index: 'TestCase',
                         icon: 'el-icon-notebook-1',
+                        children: []
+                    },
+                    {
+                        label: '用户管理',
+                        index: 'User',
+                        icon: 'el-icon-user',
                         children: []
                     }
                 ]
@@ -142,6 +162,7 @@
         mounted () {
             // 添加订阅
             this.subscriber = PubSub.subscribe("flushProject", this.loadProject)
+            this.closeTabScriber = PubSub.subscribe("closeCurTab", this.closeCurTab)
         },
         methods: {
             loadProject () {
@@ -155,8 +176,10 @@
                 })
             },
             logout() {
-                this.$cookies.remove('user')
-                this.$router.push('Login')
+                logout().then(() => {
+                    this.$cookies.remove('user')
+                    this.$router.push('Login')
+                })
             },
             // 切换项目
             changeCurProject(val) {
@@ -169,12 +192,15 @@
                 }
                 this.$router.push(item)
             },
+            closeCurTab() {
+                this.closeTab(this.curRoute.name);
+            },
             closeTab(name) {
                 const arr = this.curTabs.filter(item => item.name !== name);
                 this.$store.commit('router/setCurTabs', arr);
                 if (name === this.curRoute.name && arr.length > 0) {
                     this.$router.push(arr[arr.length - 1].name);
-                } else if (name === this.curRoute.name && arr.length > 0) {
+                } else if (name === this.curRoute.name && arr.length <= 0) {
                     this.$router.push("/Home");
                 }
             }
@@ -182,6 +208,7 @@
         destroyed() {
             // 取消订阅
             PubSub.unsubscribe(this.subscriber);
+            PubSub.unsubscribe(this.closeTabScriber);
         }
     }
 </script>
@@ -215,6 +242,7 @@
     }
     .layout-header .el-select {
         margin: 0 .5em;
+        width: auto;
     }
     .layout-header .el-dropdown {
         margin: 0 1em;
@@ -264,9 +292,9 @@
         transform: rotate(180deg);
     }
     .layout-main .router-content {
-        overflow: auto;
         box-sizing: border-box;
         height: calc(100% - 2.5rem);
+        position: relative;
     }
     .layout-footer {
         height: 3em;

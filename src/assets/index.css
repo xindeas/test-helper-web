@@ -2,6 +2,9 @@
     width: 100%;
     height: 100%;
 }
+.scroll-content {
+    overflow: auto;
+}
 /*页面标题*/
 .router-view .page-header {
     background-color: white;
@@ -38,6 +41,16 @@
 .el-tabs--left .el-tabs__content .el-tab-pane{
     height: 100%;
 }
+.el-select {
+    width: 100%;
+}
+.el-drawer__open * {
+    outline: none;
+}
+.el-drawer__body {
+    overflow: auto;
+}
+/*字体颜色*/
 .primary-txt {
     color: #409EFF;
 }

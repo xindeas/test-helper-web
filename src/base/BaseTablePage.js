@@ -7,6 +7,7 @@ export default {
     },
     data() {
         return {
+            columnItems: [],
             tableData: [],
             pageIndex: 0,
             pageSize: 10,
@@ -43,6 +44,14 @@ export default {
             const l = res.filter(item => item.success).length
             if (l > 0) {
                 this.$message.info(l + '条数据禁用成功')
+            }
+            this.loadTable();
+        },
+        afterDelete(res) {
+            this.loading.button = false
+            const l = res.filter(item => item.success).length
+            if (l > 0) {
+                this.$message.info(l + '条数据删除成功')
             }
             this.loadTable();
         },
@@ -87,6 +96,17 @@ export default {
                 name: this.$options.name + 'Edit',
                 params
             });
+        },
+        getSortParams() {
+            return this.columnItems.filter(item => item.sortAble)
+                .sort((a, b) => {
+                    return a.sortPriority - b.sortPriority;
+                }).map(item => {
+                    return {
+                        column: item.sortColumn ? item.sortColumn : item.key,
+                        order: item.sortOrder
+                    }
+                });
         }
     }
 }

@@ -6,7 +6,6 @@
                        :table-data="tableData"
                        :page-total="pageTotal"
                        :table-loading="loading.table"
-                       show-check-box
                        @loadTable="loadTable"
                        style="height: calc(100% - 32px);"></BaseTable>
             <el-pagination
