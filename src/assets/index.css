@@ -50,6 +50,9 @@
 .el-drawer__body {
     overflow: auto;
 }
+.el-button~span>.el-button {
+    margin-left: 10px;
+}
 /*字体颜色*/
 .primary-txt {
     color: #409EFF;

@@ -9,6 +9,7 @@
                 v-loading="tableLoading"
                 class="full-content">
             <el-table-column
+                    fixed="left"
                     v-if="showCheckBox"
                     type="selection"
                     width="55">

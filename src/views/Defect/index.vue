@@ -127,11 +127,18 @@
                 })
             },
             handleAdd() {
-                this.add('新增缺陷', this.editUrl);
+                this.add({
+                    title: '新增缺陷',
+                    url: this.editUrl
+                });
             },
             handleEdit(scope) {
-                this.edit('编辑缺陷', this.editUrl, {
-                    id: scope.row.id
+                this.edit({
+                    title: '编辑缺陷',
+                    url: this.editUrl,
+                    params: {
+                        id: scope.row.id
+                    }
                 });
             }
         }

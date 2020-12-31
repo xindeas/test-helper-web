@@ -77,6 +77,14 @@ const routes = [
         component: () => import('@/views/User/index')
       },
       {
+        path: '/CodeCreator',
+        name: 'CodeCreator',
+        meta: {
+          title: '代码生成'
+        },
+        component: () => import('@/views/CodeCreator/index')
+      },
+      {
         path: '/Test',
         name: 'Test',
         meta: {

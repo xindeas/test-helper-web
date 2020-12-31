@@ -1,5 +1,5 @@
 <template>
-    <el-submenu v-if="item.children && item.children.length > 0" :index="item.index">
+    <el-submenu v-if="item.children && item.children.length > 0" :index="item.index" :popper-append-to-body="false">
         <template slot="title">
             <i v-if="item.icon" :class="item.icon"></i>
             <span slot="title">{{item.label}}</span>
@@ -42,5 +42,7 @@
 </script>
 
 <style scoped>
-
+    .el-submenu {
+        position: static;
+    }
 </style>

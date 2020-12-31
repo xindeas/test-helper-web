@@ -55,7 +55,7 @@ export default {
             }
             this.loadTable();
         },
-        add(title, url, params) {
+        add({title, url, params}) {
             this.$router.selfAdd(
                 {
                     path: '/' + this.$options.name + 'Add',
@@ -76,7 +76,7 @@ export default {
                 params
             });
         },
-        edit(title, url, params) {
+        edit({title, url="dasd/asdsd", params}) {
             this.$router.selfAdd(
                 {
                     path: '/' + this.$options.name + 'Edit',

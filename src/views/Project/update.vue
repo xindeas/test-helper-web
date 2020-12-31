@@ -1,5 +1,6 @@
 <template>
-    <div class="full-content project-update">
+    <div class="full-content project-update"
+         :loading="loading.page">
         <div class="oper-bar">
             <el-button size="mini"
                        type="success"
@@ -79,36 +80,12 @@
                 </el-tab-pane>
             </el-tabs>
         </el-form>
-        <el-dialog
+        <EditVersion
                 title="添加新版本"
-                :visible.sync="visible.version"
-                width="30%">
-            <el-form ref="versionForm"
-                     :model="versionForm"
-                     label-width="80px"
-                     size="mini"
-                     class="form-content">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="版本号" prop="versionNo" :rules="versionRules.versionNo">
-                            <el-input v-model="versionForm.versionNo" placeholder="请输入" maxlength="15"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="版本说明" prop="remark" :rules="versionRules.remark">
-                            <el-input v-model="form.remark"
-                                      type="textarea"
-                                      placeholder="请输入"
-                                      maxlength="255"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-            <template slot="footer" class="dialog-footer">
-                <el-button @click="visible.version = false" size="mini">取 消</el-button>
-                <el-button type="primary" @click="handleConfirm" size="mini">确 定</el-button>
-            </template>
-        </el-dialog>
+                :visible="visible.version"
+                :project-version="versionForm"
+                @cancel="visible.version = false"
+                @confirm="handleConfirm"></EditVersion>
     </div>
 </template>
 
@@ -124,17 +101,18 @@
         Select,
         Option,
         Button,
-        Dialog,
     } from 'element-ui'
     import ProjectAuth from '@/components/ProjectAuth'
     import OperLog from '@/components/OperLog'
     import {loadProject, addProject, saveProject} from '@/service/ProjectService'
-    import {queryProjectVersion} from '@/service/ProjectVersionService'
+    import {queryProjectVersion, addProjectVersion} from '@/service/ProjectVersionService'
     import {OrderType} from "@/constant/ColumnItem";
     import PubSub from "pubsub-js";
+    import EditVersion from "@/components/EditVersion";
     export default {
         // name: "ProjectUpdate",
         components: {
+            EditVersion,
             'el-form': Form,
             'el-form-item': FormItem,
             'el-row': Row,
@@ -145,7 +123,6 @@
             'el-select': Select,
             'el-option': Option,
             'el-button': Button,
-            'el-dialog': Dialog,
             ProjectAuth,
             OperLog
         },
@@ -166,7 +143,8 @@
                     version: []
                 },
                 loading: {
-                    button: false
+                    button: false,
+                    page: false
                 },
                 visible: {
                     version: false
@@ -190,19 +168,12 @@
                     ]
                 },
                 versionForm: {
+                    id: "",
+                    projectId: "",
                     versionNo: "",
                     remark: ""
                 },
-                versionRules: {
-                    versionNo: [
-                        { required: true, message: '请输入版本号', trigger: 'blur' },
-                        { validator: checkVersionNo}
-                    ],
-                    remark: [
-                        { required: true, message: '请输入版本说明', trigger: 'blur' },
-                    ]
-                },
-                checkVersionNo
+                checkVersionNo,
             }
         },
         computed: {
@@ -228,6 +199,7 @@
                 this.$route.params.id &&
                 this.form.id !== this.$route.params.id) {
                 this.form.id = this.$route.params.id;
+                this.versionForm.projectId = this.$route.params.id;
             }
         },
         activated() {
@@ -235,6 +207,7 @@
                 this.$route.params.id &&
                 this.form.id !== this.$route.params.id) {
                 this.form.id = this.$route.params.id;
+                this.versionForm.projectId = this.$route.params.id;
             }
         },
         watch: {
@@ -323,17 +296,17 @@
                     }
                 }).then(res => {
                     this.options.version = res.result.result;
+                    this.versionForm.versionNo = this.options.version[0].versionNo;
                 });
             },
-            handleConfirm() {
+            handleConfirm(versionForm) {
                 const vm = this;
-                this.$refs.versionForm.validate((valid) => {
-                    if (valid) {
-                        vm.visible.version = false;
-                    } else {
-                        this.$message.error('表单验证失败');
-                    }
-
+                vm.loading.page = true;
+                vm.visible.version = false;
+                addProjectVersion(versionForm).then(() => {
+                    vm.loading.page = false;
+                    vm.queryVersion(versionForm.projectId);
+                    vm.form.versionNo = versionForm.versionNo;
                 });
             }
         }

@@ -9,7 +9,7 @@
                     <i v-if="collapse" class="fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <i v-else class="fold un-fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <div class="header-blank"></div>
-                    <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject">
+                    <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject" clearable>
                         <el-option
                                 v-for="item in projectList"
                                 :key="item.value"
@@ -49,7 +49,7 @@
                         </transition>
                     </div>
                 </el-main>
-                <el-footer class="layout-footer">测试工具V0.0.1</el-footer>
+                <el-footer class="layout-footer">测试工具V{{version}}</el-footer>
             </el-container>
         </el-container>
     </div>
@@ -57,6 +57,7 @@
 
 <script>
     import HeaderMenu from '@/layout/components/HeaderMenu';
+    import config from '../../package.json'
     import {
         Container,
         Header,
@@ -116,15 +117,15 @@
                         ]
                     },
                     {
-                        label: '工作台',
-                        index: 'WorkBench',
-                        icon: 'el-icon-files',
-                        children: []
-                    },
-                    {
                         label: '缺陷管理',
                         index: 'Defect',
                         icon: 'el-icon-date',
+                        children: []
+                    },
+                    {
+                        label: '工作台',
+                        index: 'WorkBench',
+                        icon: 'el-icon-files',
                         children: []
                     },
                     {
@@ -137,6 +138,12 @@
                         label: '用户管理',
                         index: 'User',
                         icon: 'el-icon-user',
+                        children: []
+                    },
+                    {
+                        label: '代码生成',
+                        index: 'CodeCreator',
+                        icon: 'el-icon-cpu',
                         children: []
                     }
                 ]
@@ -154,6 +161,9 @@
             },
             curRoute() {
                 return this.$route
+            },
+            version() {
+                return config.version;
             }
         },
         created() {
