@@ -110,8 +110,8 @@
                                 icon: 'el-icon-folder-opened',
                             },
                             {
-                                label: '模块',
-                                index: 'Module',
+                                label: '项目模块',
+                                index: 'ProjectModule',
                                 icon: 'el-icon-s-grid',
                             },
                         ]

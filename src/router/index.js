@@ -32,12 +32,12 @@ const routes = [
         component: () => import('@/views/Project/index')
       },
       {
-        path: '/Module',
-        name: 'Module',
+        path: '/ProjectModule',
+        name: 'ProjectModule',
         meta: {
-          title: '模块'
+          title: '项目模块'
         },
-        component: () => import('@/views/Module/index')
+        component: () => import('@/views/ProjectModule/index')
       },
       {
         path: '/WorkBench',
