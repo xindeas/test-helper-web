@@ -54,6 +54,7 @@
     import BaseTablePage from "@/base/BaseTablePage";
     import { queryDefect } from '@/service/DefectService'
     import {ColumnType, OrderType} from "@/constant/ColumnItem";
+    import {DefectStatusDesc} from "@/constant/DefectStatus";
     export default {
         name: 'Defect',
         mixins: [BaseTablePage],
@@ -75,6 +76,12 @@
                     {
                         key: "module",
                         label: "所属模块"
+                    },
+                    {
+                        key: "status",
+                        label: "状态",
+                        type: ColumnType.BOOLEAN,
+                        enumObj: DefectStatusDesc
                     },
                     {
                         key: "title",

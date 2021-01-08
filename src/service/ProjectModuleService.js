@@ -11,5 +11,5 @@ export function saveProjectModule (projectModule) {
     return instance.post('/project-module/save', projectModule);
 }
 export function loadProjectModule (id) {
-    return instance.post('/project-module/load/' + id);
+    return instance.get('/project-module/load/' + id);
 }

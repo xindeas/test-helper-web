@@ -16,8 +16,8 @@
                  label-width="80px"
                  size="mini"
                  class="form-content">
-            <el-tabs tab-position="left" style="height: 100%;" v-model="curTab">
-                <el-tab-pane label="基础数据" name="basic">
+            <el-tabs tab-position="left" class="full-content" v-model="curTab">
+                <el-tab-pane label="基础数据" name="basic" style="overflow: auto;">
                     <el-row>
                         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                             <el-form-item label="项目名称" prop="name" :rules="rules.name">
@@ -68,12 +68,12 @@
                         </el-row>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane label="授权" name="auth">
+                <el-tab-pane label="授权" name="auth" style="overflow: auto;">
                     <el-row class="full-content" v-if="curTab === 'auth'">
                         <ProjectAuth project-id="1" @set-data="setAuth" :auths="auths"></ProjectAuth>
                     </el-row>
                 </el-tab-pane>
-                <el-tab-pane label="操作记录" name="operLog" v-if="form.id">
+                <el-tab-pane label="操作记录" name="operLog" v-if="form.id" style="overflow: auto;">
                     <el-row class="full-content" v-if="curTab === 'operLog'">
                         <OperLog targetTb="tb_project" :targetId="form.id"></OperLog>
                     </el-row>
@@ -164,7 +164,7 @@
                 rules: {
                     name: [
                         { required: true, message: '请输入项目名称', trigger: 'blur' },
-                        { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+                        { max: 50, message: '最多输入 50 个字符', trigger: 'blur' }
                     ]
                 },
                 versionForm: {

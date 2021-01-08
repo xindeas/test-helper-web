@@ -2,9 +2,11 @@
     width: 100%;
     height: 100%;
 }
+
 .scroll-content {
     overflow: auto;
 }
+
 /*页面标题*/
 .router-view .page-header {
     background-color: white;
@@ -16,6 +18,7 @@
     display: flex;
     align-items: center;
 }
+
 /*操作栏*/
 .router-view .oper-bar {
     background-color: white;
@@ -24,48 +27,64 @@
     align-items: center;
     padding-left: 1em;
 }
+
 .router-view .table-content {
     padding: 1em;
     height: calc(100% - 4em - 2em);
     background-color: white;
     box-sizing: border-box;
 }
+
 /*重写element样式*/
+.el-table__fixed, .el-table__fixed-right, .el-table__fixed-left {
+    height: auto !important;
+}
 .el-table-column--selection .cell {
     padding-left: 14px !important;
     padding-right: 14px !important;
 }
+
 .el-tabs--left .el-tabs__content {
     height: 100%;
 }
-.el-tabs--left .el-tabs__content .el-tab-pane{
+
+.el-tabs--left .el-tabs__content .el-tab-pane {
     height: 100%;
 }
+
 .el-select {
     width: 100%;
 }
+
 .el-drawer__open * {
     outline: none;
 }
+
 .el-drawer__body {
     overflow: auto;
 }
-.el-button~span>.el-button {
+
+.el-button ~ span > .el-button {
     margin-left: 10px;
 }
+
 /*字体颜色*/
 .primary-txt {
     color: #409EFF;
 }
+
 .success-txt {
     color: #67C23A;
 }
+
 .warning-txt {
     color: #E6A23C;
 }
+
 .danger-txt {
     color: #F56C6C;
 }
+
 .info-txt {
     color: #909399;
 }

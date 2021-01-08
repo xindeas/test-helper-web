@@ -15,12 +15,12 @@
                  label-width="100px"
                  size="mini"
                  class="form-content">
-            <el-tabs tab-position="left" style="height: 100%;" v-model="curTab">
-                <el-tab-pane label="基础数据" name="basic">
+            <el-tabs tab-position="left" class="full-content" v-model="curTab">
+                <el-tab-pane label="基础数据" name="basic" style="overflow: auto;">
                     <el-row>
                         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" v-if="form.id">
                             <el-form-item label="缺陷编号" prop="defectNo">
-                                <span>{{form.defectNo}}</span>
+                                <el-input v-model="form.defectNo" disabled></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -34,7 +34,7 @@
                     <el-row>
                         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                             <el-form-item label="所属项目" prop="projectId">
-                                <el-select v-model="form.projectId" filterable placeholder="请选择">
+                                <el-select v-model="form.projectId" filterable placeholder="请选择" @change="projectIdChange" :disabled="form.id?true:false">
                                     <el-option
                                             v-for="item in options.project"
                                             :key="item.id"
@@ -65,8 +65,15 @@
                     </el-row>
                     <el-row v-if="form.projectId">
                         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                            <el-form-item label="所属模块" prop="module">
-                                <el-input v-model="form.module" placeholder="请输入" maxlength="50"></el-input>
+                            <el-form-item label="所属模块" prop="moduleId">
+                                <el-select v-model="form.moduleId" filterable placeholder="请选择">
+                                    <el-option
+                                            v-for="item in options.projectModule"
+                                            :key="item.id"
+                                            :label="item.moduleName"
+                                            :value="item.id">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -123,9 +130,9 @@
                         </el-col>
                     </el-row>
                 </el-tab-pane>
-                <el-tab-pane label="操作记录" name="operLog" v-if="form.id">
+                <el-tab-pane label="操作记录" name="operLog" v-if="form.id" style="overflow: auto;">
                     <el-row class="full-content" v-if="curTab === 'operLog'">
-                        <OperLog targetTb="tb_project" :targetId="form.id"></OperLog>
+                        <OperLog targetTb="tb_defect" :targetId="form.id"></OperLog>
                     </el-row>
                 </el-tab-pane>
             </el-tabs>
@@ -154,6 +161,7 @@
     import PubSub from "pubsub-js";
     import {queryProjectForOptions} from "@/service/ProjectService";
     import {queryProjectVersion} from "@/service/ProjectVersionService";
+    import {queryProjectModule} from "@/service/ProjectModuleService";
     import {OrderType} from "@/constant/ColumnItem";
     export default {
         components: {
@@ -179,7 +187,7 @@
                     defectNo: "",
                     remark: "",
                     targetVer: "",
-                    module: "",
+                    moduleId: "",
                     assignTo: "",
                     testBy: "",
                     findBy: "",
@@ -193,7 +201,8 @@
                     status: enumToOptions(DefectStatusDesc),
                     user: [],
                     project: [],
-                    projectVersion: []
+                    projectVersion: [],
+                    projectModule: []
                 },
                 rules: {
                     projectId: [
@@ -201,19 +210,17 @@
                     ],
                     title: [
                         { required: true, message: '请输入标题', trigger: 'blur' },
-                        { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+                        { max: 50, message: '最多输入 50 个字符', trigger: 'blur' }
                     ],
                     remark: [
                         { required: true, message: '请输入详细描述', trigger: 'blur' },
-                        { max: 65535, message: '长度在 0 到 65535 个字符', trigger: 'blur' }
+                        { max: 65535, message: '最多输入 65535 个字符', trigger: 'blur' }
                     ],
-                    module: [
-                        { required: true, message: '请输入所属模块', trigger: 'blur' },
-                        { max: 50, message: '长度在 0 到 50 个字符', trigger: 'blur' }
+                    moduleId: [
+                        { required: true, message: '请选择所属模块', trigger: 'blur' }
                     ],
                     targetVer: [
-                        { required: true, message: '请输入目标版本', trigger: 'blur' },
-                        { max: 50, message: '长度在 0 到 50 个字符', trigger: 'blur' }
+                        { required: true, message: '请选择目标版本', trigger: 'blur' }
                     ],
                     testBy: [
                         { required: true, message: '请选择追踪测试人', trigger: 'blur' }
@@ -232,23 +239,14 @@
         mounted() {
             this.mount();
         },
-        activated() {
-            this.mount();
-        },
-        watch: {
-            'form.projectId'(val) {
-                this.form.targetVer = "";
-                this.form.module = "";
-                this.queryProjectVersionOptions(val);
-            }
-        },
         methods: {
+            projectIdChange(val) {
+                this.form.targetVer = "";
+                this.form.moduleId = "";
+                this.queryProjectVersionOptions(val);
+                this.queryProjectModuleOptions(val);
+            },
             mount() {
-                // 默认追踪测试人是自己
-                this.form.testBy = this.user.id;
-                if (this.curProject) {
-                    this.form.projectId = this.curProject.id;
-                }
                 this.queryUserOptions();
                 this.queryProjectOptions();
                 if (this.$route.params &&
@@ -256,6 +254,15 @@
                     this.form.id !== this.$route.params.id) {
                     this.form.id = this.$route.params.id;
                     this.load(this.form.id);
+                }
+                // 新增时，设置默认值
+                if (!this.form.id) {
+                    // 默认追踪测试人是自己
+                    this.form.testBy = this.user.id;
+                    if (this.curProject) {
+                        this.form.projectId = this.curProject.id;
+                        this.projectIdChange(this.form.projectId);
+                    }
                 }
             },
             save() {
@@ -285,34 +292,33 @@
             },
             initData() {
                 let findBy = this.form.findBy;
-                let testBy = this.form.testBy;
                 if (!this.form.id) {
                     findBy = this.user.id;
-                    testBy = this.user.id;
                 }
                 return {
-                    project: {
-                        id: this.form.id,
-                        title: this.form.title,
-                        defectNo: this.form.defectNo,
-                        remark: this.form.remark,
-                        targetVer: this.form.targetVer,
-                        module: this.form.module,
-                        assignTo: this.form.assignTo,
-                        testBy,
-                        findBy,
-                        status: this.form.status,
-                        createDate: this.form.createDate,
-                        createBy: this.form.createBy,
-                        modifyDate: this.form.modifyDate,
-                        modifyBy: this.form.modifyBy,
-                    },
+                    id: this.form.id,
+                    projectId: this.form.projectId,
+                    title: this.form.title,
+                    defectNo: this.form.defectNo,
+                    remark: this.form.remark,
+                    targetVer: this.form.targetVer,
+                    moduleId: this.form.moduleId,
+                    assignTo: this.form.assignTo,
+                    testBy: this.form.testBy,
+                    findBy,
+                    status: this.form.status,
+                    createDate: this.form.createDate,
+                    createBy: this.form.createBy,
+                    modifyDate: this.form.modifyDate,
+                    modifyBy: this.form.modifyBy,
                 }
             },
             load(id) {
                 const vm = this;
                 loadDefect(id).then(res => {
                     vm.form = res.result;
+                    vm.queryProjectVersionOptions(vm.form.projectId);
+                    vm.queryProjectModuleOptions(vm.form.projectId);
                 });
             },
             queryUserOptions() {
@@ -329,6 +335,23 @@
                 }).then(res => {
                     if (res && res.result && Array.isArray(res.result)) {
                         vm.options.project = res.result
+                    }
+                })
+            },
+            queryProjectModuleOptions(projectId) {
+                const vm = this;
+                vm.options.projectModule = [];
+                if (!projectId) {
+                    return;
+                }
+                queryProjectModule({
+                    pagination: false,
+                    filter: {
+                        projectId
+                    }
+                }).then(res => {
+                    if (res && res.result && res.result.result && Array.isArray(res.result.result)) {
+                        vm.options.projectModule = res.result.result.map(item => item.projectModule)
                     }
                 })
             },

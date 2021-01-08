@@ -61,6 +61,11 @@
             'el-button': Button,
             'el-pagination': Pagination
         },
+        computed: {
+            curProject() {
+                return this.$store.state.project.curProject;
+            }
+        },
         data() {
             return {
                 columnItems: [
@@ -69,25 +74,26 @@
                         label: "项目"
                     },
                     {
-                        key: "moduleName",
+                        key: ["projectModule", "moduleName"],
                         label: "模块名"
                     },
                     {
-                        key: "createDate",
+                        key: ["projectModule", "createDate"],
                         label: "创建日期",
                         width: "200px",
                         type: ColumnType.DATE,
+                        sortColumn: "createDate",
                         sortAble: true,
                         sortOrder: OrderType.DESC
                     },
                     {
-                        key: "modifyDate",
+                        key: ["projectModule", "modifyDate"],
                         label: "修改日期",
                         width: "200px",
                         type: ColumnType.DATE
                     },
                 ],
-                editUrl: 'Defect/update'
+                editUrl: 'ProjectModule/update'
             }
         },
         mounted() {
@@ -96,16 +102,26 @@
         activated() {
             this.loadTable()
         },
+        watch: {
+            curProject() {
+                this.loadTable()
+            }
+        },
         methods: {
             loadTable(param) {
                 const vm = this
                 this.loading.table = true
                 const sortArr = this.getSortParams();
+                const filter = {};
+                if (vm.curProject && vm.curProject.id) {
+                    filter.projectId = vm.curProject.id
+                }
                 queryProjectModule({
                     pageIndex: vm.pageIndex,
                     pageSize: vm.pageSize,
                     pagination: true,
                     ...param,
+                    filter,
                     sorts: sortArr
                 }).then(res => {
                     vm.afterLoadTable(res);
@@ -115,16 +131,16 @@
             },
             handleAdd() {
                 this.add({
-                    title: '新增缺陷',
+                    title: '新增模块',
                     url: this.editUrl
                 });
             },
             handleEdit(scope) {
                 this.edit({
-                    title: '编辑缺陷',
+                    title: '编辑模块',
                     url: this.editUrl,
                     params: {
-                        id: scope.row.id
+                        id: scope.row.projectModule.id
                     }
                 });
             }

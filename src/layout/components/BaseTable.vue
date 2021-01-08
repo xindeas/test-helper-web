@@ -6,8 +6,7 @@
                 stripe
                 :data="tableData"
                 :max-height="tableHeight"
-                v-loading="tableLoading"
-                class="full-content">
+                v-loading="tableLoading">
             <el-table-column
                     fixed="left"
                     v-if="showCheckBox"
@@ -18,13 +17,17 @@
                 <el-table-column
                         :key="index"
                         :label="item.label"
-                        :width="item.width || '180px'">
+                        :width="item.width || '180px'"
+                        show-overflow-tooltip>
                     <template slot-scope="scope">
-                        <div v-html="getContent(item, scope.row, item.key)"></div>
+                        <div v-html="getContent(item, scope.row, item.key)" class="cell-class"></div>
                     </template>
                 </el-table-column>
             </template>
-            <el-table-column fixed="right" v-if="this.$scopedSlots.editBtn">
+            <el-table-column fixed="right"
+                             label="操作"
+                             v-if="this.$scopedSlots.editBtn"
+                             min-width="120px">
                 <template slot-scope="scope">
                     <slot name="editBtn" :index="scope.$index" :row="scope.row"></slot>
                 </template>
@@ -40,6 +43,7 @@
     } from 'element-ui'
     import {ColumnType} from "@/constant/ColumnItem";
     import * as moment from "moment";
+
     export default {
         name: 'BaseTable',
         components: {
@@ -114,7 +118,7 @@
              * 重设窗口大小触发事件
              */
             resize() {
-                this.tableHeight =  this.$refs.tableContent.offsetHeight
+                this.tableHeight = this.$refs.tableContent.offsetHeight
             },
             /**
              * 表格查询方法
@@ -140,20 +144,17 @@
                 }
                 if (columnItem.type === ColumnType.DATE) {
                     return moment(value).format("YYYY-MM-DD HH:mm:ss");
-                }
-                else if (columnItem.type === ColumnType.BOOLEAN) {
+                } else if (columnItem.type === ColumnType.BOOLEAN) {
                     if (columnItem.enumObj) {
                         return columnItem.enumObj[value];
                     }
                     return value;
-                }
-                else if (columnItem.type === ColumnType.PIC) {
+                } else if (columnItem.type === ColumnType.PIC) {
                     if (value) {
                         return `<img style="width: 45px;height: 45px;border-radius: 50%;" src="${value}"/>`
                     }
                     return "暂无图片";
-                }
-                else {
+                } else {
                     return value;
                 }
             }
@@ -162,5 +163,9 @@
 </script>
 
 <style scoped>
-
+    .cell-class {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 </style>

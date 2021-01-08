@@ -1,5 +1,5 @@
 <template>
-    <div class="project full-content router-view">
+    <div class="project full-content router-view" :loading="loading.button">
         <div class="page-header">代码生成</div>
         <div class="oper-bar">
             <el-select v-model="tableName" placeholder="请选择" style="width: 200px;" size="mini" filterable clearable>
@@ -20,10 +20,19 @@
                        :disabled="!tableName"
                        :loading="loading.button"
                        @click="createCode"
+                       style="margin-left: 1em;"
                        icon="el-icon-plus">
                 生成
             </el-button>
         </div>
+        <transition name="el-fade-in-linear">
+            <el-alert type="success"
+                      title="代码生成成功"
+                      v-if="showFlag"
+                      show-icon
+                      :closable="false"
+                      description="请到D盘codeCreator文件夹下查看"></el-alert>
+        </transition>
     </div>
 </template>
 
@@ -31,18 +40,21 @@
     import {
         Button,
         Select,
-        Option
+        Option,
+        Alert
     } from 'element-ui'
     import BaseTablePage from "@/base/BaseTablePage";
-    import { getAllTable, createCode } from '@/service/TableService'
+    import {getAllTable, createCode} from '@/service/TableService'
     import {ColumnType, OrderType} from "@/constant/ColumnItem";
+
     export default {
-        name: 'Defect',
+        name: 'CodeCreator',
         mixins: [BaseTablePage],
         components: {
             'el-button': Button,
             'el-select': Select,
             'el-option': Option,
+            'el-alert': Alert,
         },
         data() {
             return {
@@ -50,6 +62,7 @@
                 options: {
                     table: []
                 },
+                showFlag: false,
                 columnItems: [
                     {
                         key: "defectNo",
@@ -111,9 +124,12 @@
                 })
             },
             createCode() {
+                this.showFlag = false;
+                this.loading.button = true;
                 createCode(this.tableName).then(res => {
+                    this.loading.button = false;
                     if (res.success) {
-                        this.$message.success('代码生成成功，请到D盘codeCreator文件夹下查看')
+                        this.showFlag = true;
                     }
                 })
             },

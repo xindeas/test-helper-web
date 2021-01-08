@@ -24,6 +24,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>个人主页</el-dropdown-item>
                             <el-dropdown-item>我的周报</el-dropdown-item>
+                            <el-dropdown-item>修改密码</el-dropdown-item>
                             <el-dropdown-item @click.native="logout" divided>退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
