@@ -130,6 +130,11 @@
                         </el-col>
                     </el-row>
                 </el-tab-pane>
+                <el-tab-pane label="评论" name="comment" v-if="form.id" style="overflow: auto;">
+                    <el-row class="full-content" v-if="curTab === 'comment'">
+                        <Comment></Comment>
+                    </el-row>
+                </el-tab-pane>
                 <el-tab-pane label="操作记录" name="operLog" v-if="form.id" style="overflow: auto;">
                     <el-row class="full-content" v-if="curTab === 'operLog'">
                         <OperLog targetTb="tb_defect" :targetId="form.id"></OperLog>
@@ -154,6 +159,7 @@
         Button
     } from 'element-ui'
     import OperLog from '@/components/OperLog'
+    import Comment from '@/components/Comment'
     import {loadDefect, addDefect, saveDefect} from '@/service/DefectService'
     import {queryUser} from '@/service/UserService'
     import {DefectStatusDesc} from "@/constant/DefectStatus"
@@ -175,7 +181,8 @@
             'el-button': Button,
             'el-select': Select,
             'el-option': Option,
-            OperLog
+            OperLog,
+            Comment
         },
         data() {
             return {

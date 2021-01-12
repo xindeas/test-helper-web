@@ -9,3 +9,14 @@ export function enumToOptions(enumObj) {
     }
     return optionList;
 }
+
+// 获取输入的过滤条件生成过滤参数
+export function getFilterParams(form) {
+    const result = {};
+    for(const key of Object.keys(form)) {
+        if (form[key]) {
+            result[key] = form[key];
+        }
+    }
+    return result;
+}

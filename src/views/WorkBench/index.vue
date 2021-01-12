@@ -59,21 +59,21 @@
                 <el-row>
                     <el-col :span="23">
                         <el-form-item label="缺陷编号" prop="defectNo">
-                            <el-input v-model="filterForm.defectNo" placeholder="请输入"></el-input>
+                            <el-input v-model="filterForm.defectNo" placeholder="请输入" clearable></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="23">
                         <el-form-item label="标题" prop="title">
-                            <el-input v-model="filterForm.title" placeholder="请输入" maxlength="255"></el-input>
+                            <el-input v-model="filterForm.title" placeholder="模糊查询" maxlength="255" clearable></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="23">
                         <el-form-item label="所属项目" prop="projectId">
-                            <el-select v-model="filterForm.projectId" filterable placeholder="请选择" @change="projectIdChange">
+                            <el-select v-model="filterForm.projectId" filterable placeholder="请选择" @change="projectIdChange" clearable>
                                 <el-option
                                         v-for="item in options.project"
                                         :key="item.id"
@@ -84,42 +84,42 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row v-if="filterForm.projectId">
-                    <el-col :span="23">
-                        <el-form-item label="目标版本" prop="targetVer">
-                            <el-select v-model="filterForm.targetVer" filterable placeholder="请选择" multiple>
-                                <el-option
-                                        v-for="item in options.projectVersion"
-                                        :key="item.versionNo"
-                                        :label="item.versionNo"
-                                        :value="item.versionNo">
-                                    <div style="display: flex;">
-                                        <span>{{ item.versionNo }}</span>
-                                        <span class="option-remark">{{ item.remark }}</span>
-                                    </div>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row v-if="filterForm.projectId">
-                    <el-col :span="23">
-                        <el-form-item label="所属模块" prop="moduleId">
-                            <el-select v-model="filterForm.moduleId" filterable placeholder="请选择" multiple>
-                                <el-option
-                                        v-for="item in options.projectModule"
-                                        :key="item.id"
-                                        :label="item.moduleName"
-                                        :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                <transition name="el-zoom-in-top">
+                    <el-row v-if="filterForm.projectId">
+                        <el-col :span="23">
+                            <el-form-item label="目标版本" prop="targetVer">
+                                <el-select v-model="filterForm.targetVer" filterable placeholder="请选择" multiple clearable>
+                                    <el-option
+                                            v-for="item in options.projectVersion"
+                                            :key="item.versionNo"
+                                            :label="item.versionNo"
+                                            :value="item.versionNo">
+                                        <div style="display: flex;">
+                                            <span>{{ item.versionNo }}</span>
+                                            <span class="option-remark">{{ item.remark }}</span>
+                                        </div>
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="23">
+                            <el-form-item label="所属模块" prop="moduleId">
+                                <el-select v-model="filterForm.moduleId" filterable placeholder="请选择" multiple clearable>
+                                    <el-option
+                                            v-for="item in options.projectModule"
+                                            :key="item.id"
+                                            :label="item.moduleName"
+                                            :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </transition>
                 <el-row>
                     <el-col :span="23">
                         <el-form-item label="指派给" prop="assignTo">
-                            <el-select v-model="filterForm.assignTo" filterable placeholder="请选择" clearable multiple>
+                            <el-select v-model="filterForm.assignTo" filterable placeholder="请选择" clearable multiple >
                                 <el-option
                                         v-for="item in options.user"
                                         :key="item.id"
@@ -133,7 +133,21 @@
                 <el-row>
                     <el-col :span="23">
                         <el-form-item label="追踪测试人" prop="testBy">
-                            <el-select v-model="filterForm.testBy" filterable placeholder="请选择" multiple>
+                            <el-select v-model="filterForm.testBy" filterable placeholder="请选择" multiple clearable>
+                                <el-option
+                                        v-for="item in options.user"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="23">
+                        <el-form-item label="发现人" prop="findBy">
+                            <el-select v-model="filterForm.findBy" filterable placeholder="请选择" multiple clearable>
                                 <el-option
                                         v-for="item in options.user"
                                         :key="item.id"
@@ -147,7 +161,7 @@
                 <el-row>
                     <el-col :span="23">
                         <el-form-item label="状态" prop="status">
-                            <el-select v-model="filterForm.status" placeholder="请选择" multiple>
+                            <el-select v-model="filterForm.status" placeholder="请选择" multiple clearable>
                                 <el-option
                                         v-for="item in options.status"
                                         :key="item.value"
@@ -160,10 +174,10 @@
                 </el-row>
                 <el-row>
                     <el-col :span="23">
-                        <el-form-item label="详细描述" prop="remark">
+                        <el-form-item label="详细描述" prop="remark" clearable>
                             <el-input v-model="filterForm.remark"
                                       type="textarea"
-                                      placeholder="请输入"
+                                      placeholder="模糊查询"
                                       maxlength="65535"></el-input>
                         </el-form-item>
                     </el-col>
@@ -190,7 +204,7 @@
     import { queryDefect } from '@/service/DefectService'
     import {ColumnType, OrderType} from "@/constant/ColumnItem";
     import {DefectStatusDesc} from "@/constant/DefectStatus";
-    import {enumToOptions} from "@/utils";
+    import {enumToOptions, getFilterParams} from "@/utils";
     import {queryUser} from "@/service/UserService";
     import {queryProjectForOptions} from "@/service/ProjectService";
     import {queryProjectModule} from "@/service/ProjectModuleService";
@@ -214,34 +228,45 @@
             return {
                 columnItems: [
                     {
-                        key: "defectNo",
+                        key: ["defect", "defectNo"],
+                        sortColumn: "defectNo",
                         label: "缺陷编号"
                     },
                     {
-                        key: "targetVer",
+                        key: ["project", "name"],
+                        label: "项目名称"
+                    },
+                    {
+                        key: ["defect", "targetVer"],
+                        sortColumn: "defectNo",
                         label: "目标版本"
                     },
                     {
-                        key: "module",
+                        key: ["defect", "module"],
+                        sortColumn: "module",
                         label: "所属模块"
                     },
                     {
-                        key: "status",
+                        key: ["defect", "status"],
+                        sortColumn: "status",
                         label: "状态",
                         type: ColumnType.BOOLEAN,
                         enumObj: DefectStatusDesc
                     },
                     {
-                        key: "title",
+                        key: ["defect", "title"],
+                        sortColumn: "title",
                         label: "标题"
                     },
                     {
-                        key: "remark",
+                        key: ["defect", "remark"],
+                        sortColumn: "remark",
                         label: "详细描述",
                         width: "300px"
                     },
                     {
-                        key: "createDate",
+                        key: ["defect", "createDate"],
+                        sortColumn: "createDate",
                         label: "创建日期",
                         width: "200px",
                         type: ColumnType.DATE,
@@ -249,7 +274,8 @@
                         sortOrder: OrderType.DESC
                     },
                     {
-                        key: "modifyDate",
+                        key: ["defect", "modifyDate"],
+                        sortColumn: "modifyDate",
                         label: "修改日期",
                         width: "200px",
                         type: ColumnType.DATE
@@ -284,6 +310,18 @@
         computed: {
             user() {
                 return this.$cookies.get('user')
+            },
+            curProject() {
+                return this.$store.state.project.curProject;
+            }
+        },
+        watch: {
+            curProject(val) {
+                if (val) {
+                    this.filterForm.projectId = val.id;
+                    this.projectIdChange(val.id);
+                }
+                this.loadTable();
             }
         },
         mounted() {
@@ -307,7 +345,8 @@
                     pageSize: vm.pageSize,
                     pagination: true,
                     ...param,
-                    sorts: sortArr
+                    sorts: sortArr,
+                    filter: getFilterParams(vm.filterForm)
                 }).then(res => {
                     vm.afterLoadTable(res);
                 }, () => {
@@ -327,6 +366,8 @@
                 this.visible.filter = true;
             },
             projectIdChange(val) {
+                this.filterForm.targetVer = "";
+                this.filterForm.moduleId = "";
                 this.queryProjectVersionOptions(val);
                 this.queryProjectModuleOptions(val);
             },

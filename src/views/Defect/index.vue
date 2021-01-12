@@ -66,34 +66,45 @@
             return {
                 columnItems: [
                     {
-                        key: "defectNo",
+                        key: ["defect", "defectNo"],
+                        sortColumn: "defectNo",
                         label: "缺陷编号"
                     },
                     {
-                        key: "targetVer",
+                        key: ["project", "name"],
+                        label: "项目名称"
+                    },
+                    {
+                        key: ["defect", "targetVer"],
+                        sortColumn: "defectNo",
                         label: "目标版本"
                     },
                     {
-                        key: "module",
+                        key: ["defect", "module"],
+                        sortColumn: "module",
                         label: "所属模块"
                     },
                     {
-                        key: "status",
+                        key: ["defect", "status"],
+                        sortColumn: "status",
                         label: "状态",
                         type: ColumnType.BOOLEAN,
                         enumObj: DefectStatusDesc
                     },
                     {
-                        key: "title",
+                        key: ["defect", "title"],
+                        sortColumn: "title",
                         label: "标题"
                     },
                     {
-                        key: "remark",
+                        key: ["defect", "remark"],
+                        sortColumn: "remark",
                         label: "详细描述",
                         width: "300px"
                     },
                     {
-                        key: "createDate",
+                        key: ["defect", "createDate"],
+                        sortColumn: "createDate",
                         label: "创建日期",
                         width: "200px",
                         type: ColumnType.DATE,
@@ -101,7 +112,8 @@
                         sortOrder: OrderType.DESC
                     },
                     {
-                        key: "modifyDate",
+                        key: ["defect", "modifyDate"],
+                        sortColumn: "modifyDate",
                         label: "修改日期",
                         width: "200px",
                         type: ColumnType.DATE
@@ -144,7 +156,7 @@
                     title: '编辑缺陷',
                     url: this.editUrl,
                     params: {
-                        id: scope.row.id
+                        id: scope.row.defect.id
                     }
                 });
             }
