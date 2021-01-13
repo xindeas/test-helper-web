@@ -1,17 +1,20 @@
 <template>
     <div class="comment full-content">
         <div style="height: calc(100% - 50px);" class="scroll-content">
-            <div class="comm-user">
-                <el-avatar size="medium" src="https://empty">
-                    <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
-                </el-avatar>
-                <div class="comm-user-info">
-                    <div class="user-name">名称</div>
-                    <div class="comm-date info-txt">2020-03-02</div>
+            <div class="comm-target">
+                <div class="refer-comm">张三说：</div>
+                <div class="comm-user">
+                    <el-avatar size="medium" src="https://empty">
+                        <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
+                    </el-avatar>
+                    <div class="comm-user-info">
+                        <div class="user-name">名称</div>
+                        <div class="comm-date info-txt">2020-03-02</div>
+                    </div>
                 </div>
+                <div class="comm-content">这是为什么呢</div>
+                <div class="info-txt comm-return"><i class="el-icon-chat-square"></i>回复</div>
             </div>
-            <div class="comm-content">这是为什么呢</div>
-            <div class="info-txt comm-return"><i class="el-icon-chat-square"></i>回复</div>
         </div>
         <div style="height: 50px;">
             <el-input v-model="form.remark"
@@ -57,6 +60,9 @@
 </script>
 
 <style scoped>
+    .comm-target+.comm-target {
+        margin-top: 1em;
+    }
     .comm-user {
         display: flex;
         align-items: center;
@@ -79,5 +85,15 @@
     .comm-return {
         font-size: .9em;
         cursor: pointer;
+    }
+    .refer-comm {
+        background-color: #dcdfe6;
+        border-radius: .5em;
+        font-size: .5em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 50%;
+        padding: 1em;
     }
 </style>

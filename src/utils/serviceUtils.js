@@ -4,6 +4,12 @@ import VueCookies from "vue-cookies";
 import {refreshUserCookie} from "./cookieUtil";
 import router from '@/router'
 
+const code = {
+    success: 200,
+    faild: 500,
+    expired: 501
+}
+
 const instance = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,
     timeout: 10000
@@ -18,6 +24,7 @@ instance.interceptors.request.use(
         const user = VueCookies.get('user')
         if (user) {
             refreshUserCookie(user)
+            config.headers.Authorization = user.token
             return config;
         }
         else {
@@ -39,6 +46,9 @@ instance.interceptors.response.use(
     res => {
         if (res.data && !res.data.success) {
             Message.error(res.data.msg || '未知错误')
+            if (res.data.code === code.expired) {
+                router.push('/Login')
+            }
         }
         return res.data
     },

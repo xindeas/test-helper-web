@@ -72,7 +72,10 @@
                         login(this.loginForm).then(data => {
                             this.loginLoading = false
                             if (data.success) {
-                                refreshUserCookie(data.result)
+                                refreshUserCookie({
+                                    ...data.result.user,
+                                    token: data.result.token
+                                })
                                 this.$router.push('Home')
                             }
                         }, () => {

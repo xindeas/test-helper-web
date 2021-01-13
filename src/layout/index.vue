@@ -9,6 +9,12 @@
                     <i v-if="collapse" class="fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <i v-else class="fold un-fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <div class="header-blank"></div>
+                    <el-badge :value="12" :max="99" class="header-icon">
+                        <i class="el-icon-bell"></i>
+                    </el-badge>
+                    <el-badge hidden :value="10" :max="99" class="header-icon">
+                        <i class="el-icon-message"></i>
+                    </el-badge>
                     <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject" clearable>
                         <el-option
                                 v-for="item in projectList"
@@ -70,7 +76,8 @@
         Option,
         Dropdown,
         DropdownMenu,
-        DropdownItem
+        DropdownItem,
+        Badge
     } from 'element-ui'
     import { queryProjectForOptions } from '@/service/ProjectService'
     import { logout } from '@/service/UserService'
@@ -91,6 +98,7 @@
             'el-dropdown': Dropdown,
             'el-dropdown-menu': DropdownMenu,
             'el-dropdown-item': DropdownItem,
+            'el-badge': Badge,
         },
         data () {
             return {
@@ -257,6 +265,9 @@
     }
     .layout-header .el-dropdown {
         margin: 0 1em;
+    }
+    .layout-header .header-icon {
+        margin: 0 .7em;
     }
     .header-blank {
         flex: 1;
