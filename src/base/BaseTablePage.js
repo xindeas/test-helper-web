@@ -55,7 +55,7 @@ export default {
             }
             this.loadTable();
         },
-        add({title, url, params}) {
+        add({title, url, params, query}) {
             this.$router.selfAdd(
                 {
                     path: '/' + this.$options.name + 'Add',
@@ -73,10 +73,11 @@ export default {
                 })
             this.$router.push({
                 name: this.$options.name + 'Add',
-                params
+                params,
+                query
             });
         },
-        edit({title, url="dasd/asdsd", params}) {
+        edit({title, url, params, query}) {
             this.$router.selfAdd(
                 {
                     path: '/' + this.$options.name + 'Edit',
@@ -94,7 +95,8 @@ export default {
                 })
             this.$router.push({
                 name: this.$options.name + 'Edit',
-                params
+                params,
+                query
             });
         },
         getSortParams() {

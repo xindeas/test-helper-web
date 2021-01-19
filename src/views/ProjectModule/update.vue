@@ -121,10 +121,10 @@
                     this.form.projectId = this.curProject.id;
                 }
                 this.queryProjectOptions();
-                if (this.$route.params &&
-                    this.$route.params.id &&
-                    this.form.id !== this.$route.params.id) {
-                    this.form.id = this.$route.params.id;
+                if (this.$route.query &&
+                    this.$route.query.id &&
+                    this.form.id !== this.$route.query.id) {
+                    this.form.id = this.$route.query.id;
                     this.load(this.form.id);
                 }
             },

@@ -67,6 +67,7 @@
   .from-left {
     position: absolute;
     overflow: hidden;
+    background: #43454C !important;
     transform: translateX(100%);
   }
   .from-right {

@@ -249,7 +249,7 @@
                 this.edit({
                     title: '编辑项目',
                     url: this.editUrl,
-                    params: {
+                    query: {
                         id: scope.row.project.id
                     }
                 });

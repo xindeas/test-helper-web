@@ -155,7 +155,7 @@
                 this.edit({
                     title: '编辑缺陷',
                     url: this.editUrl,
-                    params: {
+                    query: {
                         id: scope.row.defect.id
                     }
                 });

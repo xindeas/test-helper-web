@@ -195,19 +195,19 @@
             }
         },
         mounted() {
-            if (this.$route.params &&
-                this.$route.params.id &&
-                this.form.id !== this.$route.params.id) {
-                this.form.id = this.$route.params.id;
-                this.versionForm.projectId = this.$route.params.id;
+            if (this.$route.query &&
+                this.$route.query.id &&
+                this.form.id !== this.$route.query.id) {
+                this.form.id = this.$route.query.id;
+                this.versionForm.projectId = this.$route.query.id;
             }
         },
         activated() {
-            if (this.$route.params &&
-                this.$route.params.id &&
-                this.form.id !== this.$route.params.id) {
-                this.form.id = this.$route.params.id;
-                this.versionForm.projectId = this.$route.params.id;
+            if (this.$route.query &&
+                this.$route.query.id &&
+                this.form.id !== this.$route.query.id) {
+                this.form.id = this.$route.query.id;
+                this.versionForm.projectId = this.$route.query.id;
             }
         },
         watch: {

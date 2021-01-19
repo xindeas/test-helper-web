@@ -139,7 +139,7 @@
                 this.edit({
                     title: '编辑模块',
                     url: this.editUrl,
-                    params: {
+                    query: {
                         id: scope.row.projectModule.id
                     }
                 });

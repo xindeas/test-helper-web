@@ -5,8 +5,8 @@
                 <div class="comm-target" :key="index">
                     <div class="refer-comm" v-if="item.referDefectComment">张三说：{{item.referDefectComment.remark}}</div>
                     <div class="comm-user">
-                        <el-avatar size="medium" src="https://empty">
-                            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
+                        <el-avatar size="medium" :src="item.user.avatar">
+                            <img src="@/assets/pic.png"/>
                         </el-avatar>
                         <div class="comm-user-info">
                             <div class="user-name">{{item.user.name}}</div>
@@ -27,6 +27,16 @@
                 <el-button slot="append" icon="el-icon-s-promotion" @click="addComment"></el-button>
             </el-input>
         </div>
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%">
+            <template>这是一段信息</template>
+            <template slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -35,6 +45,7 @@
         Input,
         Button,
         Avatar,
+        Dialog,
         Message
     } from 'element-ui'
     import {addDefectComment, queryDefectComment} from '@/service/DefectCommentService'
@@ -46,6 +57,7 @@
             'el-input': Input,
             'el-button': Button,
             'el-avatar': Avatar,
+            'el-dialog': Dialog
         },
         props: {
             defectId: {
@@ -62,6 +74,7 @@
                     reactCommentId: "",
                     remark: ""
                 },
+                dialogVisible: false,
                 comments: []
             }
         },
@@ -111,7 +124,7 @@
 
 <style scoped>
     .comm-target {
-        margin-bottom: 1em;
+        margin-bottom: 2em;
     }
 
     .comm-user {
@@ -136,11 +149,13 @@
 
     .comm-content {
         margin-bottom: .5em;
+        margin-left: 2rem;
     }
 
     .comm-return {
         font-size: .9em;
         cursor: pointer;
+        margin-left: 2rem;
     }
 
     .refer-comm {

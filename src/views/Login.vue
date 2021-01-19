@@ -97,15 +97,19 @@
         justify-content: center;
         align-items: center;
         background-color: #43454C;
+        background-image: url('../assets/bak.jpg');
+        background-position: center;
+        background-size: cover;
     }
     .form-content {
         display: block;
         width: 25em;
         padding: 1em;
         border-radius: .5em;
-        background-color: rgba(255, 255, 255, .7);
+        background-color: rgba(0, 0, 0, .7);
     }
     .form-content h2 {
+        color: white;
         text-align: center;
     }
     .btn-row {
