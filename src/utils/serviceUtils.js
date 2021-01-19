@@ -5,9 +5,9 @@ import {refreshUserCookie} from "./cookieUtil";
 import router from '@/router'
 
 const code = {
-    success: 200,
-    faild: 500,
-    expired: 501
+    success: '200',
+    faild: '500',
+    expired: '501'
 }
 
 const instance = axios.create({
@@ -46,7 +46,8 @@ instance.interceptors.response.use(
     res => {
         if (res.data && !res.data.success) {
             Message.error(res.data.msg || '未知错误')
-            if (res.data.code === code.expired) {
+            console.log(res);
+            if (res.data.code.toString() === code.expired) {
                 router.push('/Login')
             }
         }

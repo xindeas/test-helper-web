@@ -1,20 +1,22 @@
 <template>
     <div class="comment full-content">
         <div style="height: calc(100% - 50px);" class="scroll-content">
-            <div class="comm-target">
-                <div class="refer-comm">张三说：</div>
-                <div class="comm-user">
-                    <el-avatar size="medium" src="https://empty">
-                        <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
-                    </el-avatar>
-                    <div class="comm-user-info">
-                        <div class="user-name">名称</div>
-                        <div class="comm-date info-txt">2020-03-02</div>
+            <template v-for="(item, index) of comments">
+                <div class="comm-target" :key="index">
+                    <div class="refer-comm" v-if="item.referDefectComment">张三说：{{item.referDefectComment.remark}}</div>
+                    <div class="comm-user">
+                        <el-avatar size="medium" src="https://empty">
+                            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
+                        </el-avatar>
+                        <div class="comm-user-info">
+                            <div class="user-name">{{item.user.name}}</div>
+                            <div class="comm-date info-txt">{{item.defectComment.createDate | dateTimeFormatter}}</div>
+                        </div>
                     </div>
+                    <div class="comm-content">{{item.defectComment.remark}}</div>
+                    <div class="info-txt comm-return"><i class="el-icon-chat-square"></i>回复</div>
                 </div>
-                <div class="comm-content">这是为什么呢</div>
-                <div class="info-txt comm-return"><i class="el-icon-chat-square"></i>回复</div>
-            </div>
+            </template>
         </div>
         <div style="height: 50px;">
             <el-input v-model="form.remark"
@@ -22,7 +24,7 @@
                       placeholder="请在此输入您的伟论"
                       show-word-limit
                       maxlength="500">
-                <el-button slot="append" icon="el-icon-s-promotion"></el-button>
+                <el-button slot="append" icon="el-icon-s-promotion" @click="addComment"></el-button>
             </el-input>
         </div>
     </div>
@@ -33,7 +35,11 @@
         Input,
         Button,
         Avatar,
+        Message
     } from 'element-ui'
+    import {addDefectComment, queryDefectComment} from '@/service/DefectCommentService'
+    import {OrderType} from "@/constant/ColumnItem";
+
     export default {
         name: "Comment",
         components: {
@@ -48,44 +54,95 @@
         },
         data() {
             return {
+                pageIndex: 0,
+                pageSize: 10,
                 form: {
                     defectId: "",
                     userId: "",
                     reactCommentId: "",
                     remark: ""
                 },
+                comments: []
+            }
+        },
+        computed: {
+            user() {
+                return this.$cookies.get('user')
+            }
+        },
+        mounted() {
+            this.form.defectId = this.defectId;
+            this.form.userId = this.user.id;
+            this.queryComment();
+        },
+        methods: {
+            addComment() {
+                if (!this.form.remark) {
+                    Message.error('请输入评论内容！')
+                    return;
+                }
+                addDefectComment({
+                    defectComment: this.form
+                }).then(() => {
+                    Message.error('评论发表成功！')
+                    this.queryComment();
+                });
+            },
+            queryComment() {
+                const vm = this;
+                queryDefectComment({
+                    pageIndex: vm.pageIndex,
+                    pageSize: vm.pageSize,
+                    pagination: true,
+                    filter: {
+                        defectId: vm.defectId
+                    },
+                    sorts: [{
+                        column: 'createDate',
+                        order: OrderType.DESC
+                    }]
+                }).then(res => {
+                    vm.comments = res.result.result.reverse();
+                });
             }
         }
     }
 </script>
 
 <style scoped>
-    .comm-target+.comm-target {
-        margin-top: 1em;
+    .comm-target {
+        margin-bottom: 1em;
     }
+
     .comm-user {
         display: flex;
         align-items: center;
         margin-bottom: .5em;
     }
+
     .comm-user-info {
         margin-left: 1em;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
     .user-name {
         font-weight: bold;
     }
+
     .comm-date {
         font-size: .7em;
     }
+
     .comm-content {
         margin-bottom: .5em;
     }
+
     .comm-return {
         font-size: .9em;
         cursor: pointer;
     }
+
     .refer-comm {
         background-color: #dcdfe6;
         border-radius: .5em;

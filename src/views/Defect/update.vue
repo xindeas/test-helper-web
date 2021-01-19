@@ -132,7 +132,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="评论" name="comment" v-if="form.id" style="overflow: auto;">
                     <el-row class="full-content" v-if="curTab === 'comment'">
-                        <Comment></Comment>
+                        <Comment :defect-id="form.id"></Comment>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="操作记录" name="operLog" v-if="form.id" style="overflow: auto;">
