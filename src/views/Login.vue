@@ -23,7 +23,8 @@
                     </el-col>
                 </el-row>
                 <el-row class="btn-row">
-                    <el-button class="full-btn" type="primary" @click="submitForm" :loading="loginLoading">登录</el-button>
+                    <el-button class="full-btn" type="primary" @click="submitForm" :loading="loginLoading">登录
+                    </el-button>
                 </el-row>
             </el-form>
         </div>
@@ -39,8 +40,9 @@
         Row,
         Col
     } from 'element-ui'
-    import { login } from '@/service/UserService.js'
-    import { refreshUserCookie } from '@/utils/cookieUtil'
+    import {login} from '@/service/UserService.js'
+    import {refreshUserCookie} from '@/utils/cookieUtil'
+
     export default {
         name: 'Login',
         components: {
@@ -51,7 +53,7 @@
             'el-row': Row,
             'el-col': Col
         },
-        data () {
+        data() {
             return {
                 loginLoading: false,
                 loginForm: {
@@ -59,13 +61,13 @@
                     pwd: 'admin'
                 },
                 rules: {
-                    login: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-                    pwd: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+                    login: [{required: true, message: '请输入账号', trigger: 'blur'}],
+                    pwd: [{required: true, message: '请输入密码', trigger: 'blur'}]
                 }
             }
         },
         methods: {
-            submitForm () {
+            submitForm() {
                 this.$refs.loginForm.validate().then((status) => {
                     if (status) {
                         this.loginLoading = true
@@ -101,6 +103,8 @@
         background-position: center;
         background-size: cover;
     }
+
+
     .form-content {
         display: block;
         width: 25em;
@@ -108,13 +112,16 @@
         border-radius: .5em;
         background-color: rgba(0, 0, 0, .7);
     }
+
     .form-content h2 {
         color: white;
         text-align: center;
     }
+
     .btn-row {
         margin-bottom: .5em;
     }
+
     .full-btn {
         display: block;
         width: 100%;
