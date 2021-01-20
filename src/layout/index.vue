@@ -9,12 +9,28 @@
                     <i v-if="collapse" class="fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <i v-else class="fold un-fold el-icon-s-unfold" @click="collapse = !collapse"></i>
                     <div class="header-blank"></div>
-                    <el-badge :value="12" :max="99" class="header-icon">
-                        <i class="el-icon-bell"></i>
-                    </el-badge>
-                    <el-badge hidden :value="10" :max="99" class="header-icon">
-                        <i class="el-icon-message"></i>
-                    </el-badge>
+                    <el-popover
+                            placement="bottom"
+                            title="提醒"
+                            width="200"
+                            trigger="hover">
+                        <el-badge slot="reference" :value="12" :max="99" class="header-icon">
+                            <i class="el-icon-bell"></i>
+                        </el-badge>
+                        <div>缺陷新增提醒</div>
+                    </el-popover>
+                    <el-popover
+                            placement="bottom"
+                            title="消息"
+                            width="200"
+                            trigger="hover">
+                        <el-badge slot="reference" hidden :value="10" :max="99" class="header-icon">
+                            <i class="el-icon-message"></i>
+                        </el-badge>
+                        <template>
+                            <div>某某某回复了你的评论</div>
+                        </template>
+                    </el-popover>
                     <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject" clearable>
                         <el-option
                                 v-for="item in projectList"
@@ -77,10 +93,11 @@
         Dropdown,
         DropdownMenu,
         DropdownItem,
-        Badge
+        Badge,
+        Popover
     } from 'element-ui'
-    import { queryProjectForOptions } from '@/service/ProjectService'
-    import { logout } from '@/service/UserService'
+    import {queryProjectForOptions} from '@/service/ProjectService'
+    import {logout} from '@/service/UserService'
     import PubSub from "pubsub-js"
 
     export default {
@@ -99,8 +116,9 @@
             'el-dropdown-menu': DropdownMenu,
             'el-dropdown-item': DropdownItem,
             'el-badge': Badge,
+            'el-popover': Popover
         },
-        data () {
+        data() {
             return {
                 subscriber: "",
                 closeTabScriber: "",
@@ -178,13 +196,13 @@
         created() {
             this.loadProject()
         },
-        mounted () {
+        mounted() {
             // 添加订阅
             this.subscriber = PubSub.subscribe("flushProject", this.loadProject)
             this.closeTabScriber = PubSub.subscribe("closeCurTab", this.closeCurTab)
         },
         methods: {
-            loadProject () {
+            loadProject() {
                 const vm = this
                 queryProjectForOptions({
                     userId: vm.user.id
@@ -235,9 +253,11 @@
     .layout {
         overflow: hidden;
     }
+
     .el-aside {
-        box-shadow: 0 0 1em  #999999;
+        box-shadow: 0 0 1em #999999;
     }
+
     .layout-header {
         padding: 0;
         width: 100%;
@@ -245,45 +265,55 @@
         align-items: center;
         box-sizing: border-box;
     }
-    .layout-header>* {
+
+    .layout-header > * {
         cursor: pointer;
     }
+
     .layout-header .fold {
         margin: 0 .5em;
         font-size: 1.5em;
         transform: rotate(0);
         transition: all 250ms;
     }
+
     .layout-header .un-fold {
         margin: 0 .5em;
         font-size: 1.5em;
         transform: rotate(180deg);
     }
+
     .layout-header .el-select {
         margin: 0 .5em;
         width: auto;
     }
+
     .layout-header .el-dropdown {
         margin: 0 1em;
     }
+
     .layout-header .header-icon {
         margin: 0 .7em;
     }
+
     .header-blank {
         flex: 1;
     }
+
     .layout-main {
         height: 100%;
         padding: 0 1em 0 1em;
         box-sizing: border-box;
         overflow: hidden;
     }
+
     .layout-main .tabs-bar {
         height: 2.5rem;
         background-color: #f5f7fa;
         border: 1px solid #dcdfe6;
         box-sizing: border-box;
     }
+
     .layout-main .tabs-bar .tab-item {
         display: inline-block;
         height: 100%;
@@ -294,30 +324,36 @@
         font-size: .7em;
         border-bottom: 1px solid #dcdfe6;
     }
+
     .layout-main .tabs-bar .tab-item.current {
         background-color: white;
         border-left: 1px solid #dcdfe6;
         border-right: 1px solid #dcdfe6;
         border-bottom: 1px solid transparent;
     }
+
     .layout-main .tabs-bar .tab-item:after {
         content: '';
         height: 100%;
         display: inline-block;
         vertical-align: middle;
     }
+
     .layout-main .tabs-bar .el-icon-close {
         transition: all 250ms;
         font-size: 1.2em;
     }
+
     .layout-main .tabs-bar .el-icon-close:hover {
         transform: rotate(180deg);
     }
+
     .layout-main .router-content {
         box-sizing: border-box;
         height: calc(100% - 2.5rem);
         position: relative;
     }
+
     .layout-footer {
         height: 3em;
         display: flex;
@@ -328,15 +364,18 @@
         margin: 0 16px;
         background-color: white;
     }
+
     .mainRouter-enter-active, .mainRouter-leave-active {
         position: absolute;
         transition: all .5s;
     }
+
     .mainRouter-enter {
         position: absolute;
         opacity: 0;
         transform: translateX(50%);
     }
+
     .mainRouter-leave-to {
         position: absolute;
         opacity: 0;
