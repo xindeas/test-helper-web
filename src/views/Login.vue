@@ -1,7 +1,7 @@
 <template>
     <div class="full-content login">
         <div class="form-content">
-            <h2>登录</h2>
+            <h2>欢迎使用</h2>
             <el-form :model="loginForm" :rules="rules" ref="loginForm">
                 <el-form-item prop="login">
                     <el-input v-model="loginForm.login"
