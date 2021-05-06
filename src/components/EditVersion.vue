@@ -19,6 +19,7 @@
                     <el-form-item label="版本说明" prop="remark" :rules="versionRules.remark">
                         <el-input v-model="versionForm.remark"
                                   type="textarea"
+                                  :rows="4"
                                   placeholder="请输入"
                                   maxlength="255"></el-input>
                     </el-form-item>

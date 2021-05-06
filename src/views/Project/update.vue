@@ -38,6 +38,7 @@
                                 <el-form-item label="版本说明" prop="versionDesc" :rules="versionDescRules">
                                     <el-input v-model="form.versionDesc"
                                               type="textarea"
+                                              :rows="4"
                                               placeholder="请输入"
                                               maxlength="255"></el-input>
                                 </el-form-item>

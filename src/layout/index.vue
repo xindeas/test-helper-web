@@ -220,7 +220,7 @@
             },
             // 切换项目
             changeCurProject(val) {
-                const project = this.projectList.find(item => item.id === val);
+                const project = this.projectList.find(item => item.id === val) || {};
                 this.$store.commit("project/setCurProject", project)
             },
             jumpTo(item) {
@@ -330,6 +330,7 @@
         border-left: 1px solid #dcdfe6;
         border-right: 1px solid #dcdfe6;
         border-bottom: 1px solid transparent;
+        border-radius: 5px 5px 0 0;
     }
 
     .layout-main .tabs-bar .tab-item:after {

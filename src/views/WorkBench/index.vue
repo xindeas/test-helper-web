@@ -177,6 +177,7 @@
                         <el-form-item label="详细描述" prop="remark" clearable>
                             <el-input v-model="filterForm.remark"
                                       type="textarea"
+                                      :rows="4"
                                       placeholder="模糊查询"
                                       maxlength="65535"></el-input>
                         </el-form-item>

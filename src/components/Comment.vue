@@ -97,7 +97,7 @@
                 addDefectComment({
                     defectComment: this.form
                 }).then(() => {
-                    Message.error('评论发表成功！')
+                    Message.success('评论发表成功！')
                     this.queryComment();
                 });
             },

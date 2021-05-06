@@ -124,6 +124,7 @@
                             <el-form-item label="详细描述" prop="remark">
                                 <el-input v-model="form.remark"
                                           type="textarea"
+                                          :rows="4"
                                           placeholder="请输入"
                                           maxlength="65535"></el-input>
                             </el-form-item>
