@@ -31,7 +31,7 @@
                             <div>某某某回复了你的评论</div>
                         </template>
                     </el-popover>
-                    <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject" clearable>
+                    <el-select v-model="myProject" placeholder="请选择项目" size="mini" @change="changeCurProject" filterable clearable>
                         <el-option
                                 v-for="item in projectList"
                                 :key="item.value"
@@ -59,7 +59,7 @@
                                  @click="jumpTo(item)">
                                 {{item.meta.title}}
                                 <i class="el-icon-close"
-                                   v-if="curTabs.length > 1 || item.name !== 'Home'"
+                                   v-if="item.name !== 'Home'"
                                    @click.stop="closeTab(item.name)"></i>
                             </div>
                         </template>
