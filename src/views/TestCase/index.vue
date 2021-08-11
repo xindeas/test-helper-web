@@ -1,6 +1,5 @@
 <template>
     <div class="project full-content router-view">
-        <div class="page-header">测试用例</div>
         <div class="oper-bar"><el-button size="mini" @click="loadTable">查询</el-button></div>
         <div class="table-content">
             <BaseTable :column-items="columnItems"

@@ -23,23 +23,40 @@ const routes = [
                     title: '首页'
                 },
                 component: () => import('@/views/Home')
-            },
+            }
+        ]
+    },
+    {
+        path: '/Project',
+        name: 'Project',
+        meta: {
+            title: '项目'
+        },
+        component: () => import('@/layout/index'),
+        children: [
             {
-                path: '/Project',
-                name: 'Project',
+                path: '/Project/MyProject',
+                name: 'MyProject',
                 meta: {
                     title: '我的项目'
                 },
-                component: () => import('@/views/Project/index')
+                component: () => import('@/views/MyProject/index')
             },
             {
-                path: '/ProjectModule',
+                path: '/Project/ProjectModule',
                 name: 'ProjectModule',
                 meta: {
                     title: '项目模块'
                 },
                 component: () => import('@/views/ProjectModule/index')
             },
+        ]
+    },
+    {
+        path: '/W',
+        name: 'W',
+        component: () => import('@/layout/index'),
+        children: [
             {
                 path: '/WorkBench',
                 name: 'WorkBench',
@@ -130,16 +147,31 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
-router.selfAdd = (params) => {
-    const existIndex = router.options.routes[0].children.findIndex(item => item.name === params.name)
-    if (existIndex < 0) {
-        router.options.routes[0].children.push(params);
-        router.matcher = new VueRouter().matcher;
-        router.addRoutes(router.options.routes)
+router.selfAdd = (params, parentName) => {
+    const parent = router.options.routes.find(item => item.name === parentName)
+    console.log(router);
+    if (parent) {
+        const existIndex = parent.children.findIndex(item => item.name === params.name)
+        if (existIndex < 0) {
+            parent.children.push(params);
+            router.matcher = new VueRouter().matcher;
+            router.addRoutes(router.options.routes)
+        } else {
+            parent.children.splice(existIndex, 1, params);
+            router.matcher = new VueRouter().matcher;
+            router.addRoutes(router.options.routes)
+        }
     } else {
-        router.options.routes[0].children.splice(existIndex, 1, params);
-        router.matcher = new VueRouter().matcher;
-        router.addRoutes(router.options.routes)
+        const existIndex = router.options.routes[0].children.findIndex(item => item.name === params.name)
+        if (existIndex < 0) {
+            router.options.routes[0].children.push(params);
+            router.matcher = new VueRouter().matcher;
+            router.addRoutes(router.options.routes)
+        } else {
+            router.options.routes[0].children.splice(existIndex, 1, params);
+            router.matcher = new VueRouter().matcher;
+            router.addRoutes(router.options.routes)
+        }
     }
 }
 router.beforeEach((to, from, next) => {

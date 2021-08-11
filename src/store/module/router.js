@@ -7,6 +7,28 @@ export default {
     },
     mutations: {
         setCurTabs(state, v) {
+            if (v) {
+                const home = v.find(item => item.path === '/Home')
+                if (!home) {
+                    v = [{
+                        path: '/Home',
+                        name: 'Home',
+                        meta: {
+                            title: '首页'
+                        },
+                        component: () => import('@/views/Home')
+                    }].concat(v)
+                }
+            } else {
+                v = [{
+                    path: '/Home',
+                    name: 'Home',
+                    meta: {
+                        title: '首页'
+                    },
+                    component: () => import('@/views/Home')
+                }]
+            }
             state.curTabs = v;
         }
     }

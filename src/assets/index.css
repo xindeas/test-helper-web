@@ -7,6 +7,23 @@
     overflow: auto;
 }
 
+.full-height {
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/*滚动条样式重写*/
+.scroll-bar .el-scrollbar__wrap {
+    overflow-x: hidden;
+}
+
+.scroll-bar .el-scrollbar__view {
+    height: 100%;
+}
+
 /*页面标题*/
 .router-view .page-header {
     background-color: white;
@@ -26,11 +43,12 @@
     display: flex;
     align-items: center;
     padding-left: 1em;
+    padding-top: 2em;
 }
 
 .router-view .table-content {
     padding: 1em;
-    height: calc(100% - 4em - 2em);
+    height: calc(100% - 2em - 2em);
     background-color: white;
     box-sizing: border-box;
 }
@@ -39,6 +57,7 @@
 .el-table__fixed, .el-table__fixed-right, .el-table__fixed-left {
     height: auto !important;
 }
+
 .el-table-column--selection .cell {
     padding-left: 14px !important;
     padding-right: 14px !important;

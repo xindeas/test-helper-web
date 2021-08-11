@@ -1,6 +1,5 @@
 <template>
     <div class="project full-content router-view">
-        <div class="page-header">项目模块</div>
         <div class="oper-bar">
             <el-button size="mini"
                        plain

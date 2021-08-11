@@ -56,6 +56,11 @@ export default {
             this.loadTable();
         },
         add({title, url, params, query}) {
+            const matched = this.$route.matched || []
+            let parentName = ''
+            if (matched && matched.length > 0) {
+                parentName = matched[0].name
+            }
             this.$router.selfAdd(
                 {
                     path: '/' + this.$options.name + 'Add',
@@ -70,7 +75,7 @@ export default {
                         name: this.$options.name + 'Add',
                         render: h => h('com')
                     }
-                })
+                }, parentName)
             this.$router.push({
                 name: this.$options.name + 'Add',
                 params,
@@ -78,6 +83,11 @@ export default {
             });
         },
         edit({title, url, params, query}) {
+            const matched = this.$route.matched || []
+            let parentName = ''
+            if (matched && matched.length > 0) {
+                parentName = matched[0].name
+            }
             this.$router.selfAdd(
                 {
                     path: '/' + this.$options.name + 'Edit',
@@ -92,7 +102,7 @@ export default {
                         name: this.$options.name + 'Edit',
                         render: h => h('com')
                     }
-                })
+                }, parentName)
             this.$router.push({
                 name: this.$options.name + 'Edit',
                 params,

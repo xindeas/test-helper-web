@@ -1,6 +1,5 @@
 <template>
     <div class="project full-content router-view">
-        <div class="page-header">我的项目</div>
         <div class="oper-bar">
             <el-button size="mini"
                        plain
@@ -149,7 +148,7 @@
     import EditVersion from "@/components/EditVersion";
 
     export default {
-        name: 'Project',
+        name: 'MyProject',
         mixins: [BaseTablePage],
         components: {
             EditVersion,
@@ -213,7 +212,7 @@
                     versionNo: "",
                     remark: ""
                 },
-                editUrl: 'Project/update'
+                editUrl: 'MyProject/update'
             }
         },
         mounted() {

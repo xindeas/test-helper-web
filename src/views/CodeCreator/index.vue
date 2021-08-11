@@ -1,6 +1,5 @@
 <template>
     <div class="project full-content router-view" :loading="loading.button">
-        <div class="page-header">代码生成</div>
         <div class="oper-bar">
             <el-select v-model="tableName" placeholder="请选择" style="width: 200px;" size="mini" filterable clearable>
                 <el-option
