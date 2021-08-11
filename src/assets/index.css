@@ -16,6 +16,11 @@
 }
 
 /*滚动条样式重写*/
+
+.scroll-bar {
+    overflow-x: hidden;
+}
+
 .scroll-bar .el-scrollbar__wrap {
     overflow-x: hidden;
 }

@@ -2,7 +2,7 @@
   <div class="layout full-content">
     <el-container class="full-content">
       <el-aside width="auto">
-        <el-scrollbar class="full-height scroll-bar">
+        <el-scrollbar class="full-content scroll-bar">
           <SideMenu :menu="menuList"/>
         </el-scrollbar>
       </el-aside>
@@ -22,11 +22,13 @@
             </template>
           </div>
           <div class="router-content">
-            <transition name="mainRouter">
-              <keep-alive :include="curTabsName">
-                <router-view :key="curRoute.path"/>
-              </keep-alive>
-            </transition>
+            <el-scrollbar class="full-content scroll-bar">
+              <transition name="mainRouter">
+                <keep-alive :include="curTabsName">
+                  <router-view :key="curRoute.path"/>
+                </keep-alive>
+              </transition>
+            </el-scrollbar>
           </div>
         </el-main>
         <el-footer class="layout-footer">测试工具V{{ version }}</el-footer>
@@ -171,10 +173,6 @@ export default {
   box-shadow: 0 0 1em #999999;
 }
 
-.scroll-bar {
-  overflow-x: hidden;
-}
-
 .layout-header {
   padding: 0;
   width: 100%;
@@ -281,7 +279,7 @@ export default {
   padding: 0;
   margin: 0 16px;
   background-color: white;
-  box-shadow: rgba(0,0,0,.5);
+  box-shadow: rgba(0, 0, 0, .5);
 }
 
 .mainRouter-enter-active, .mainRouter-leave-active {
