@@ -149,7 +149,6 @@ const router = new VueRouter({
 })
 router.selfAdd = (params, parentName) => {
     const parent = router.options.routes.find(item => item.name === parentName)
-    console.log(router);
     if (parent) {
         const existIndex = parent.children.findIndex(item => item.name === params.name)
         if (existIndex < 0) {
