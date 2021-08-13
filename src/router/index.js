@@ -147,30 +147,35 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
-router.selfAdd = (params, parentName) => {
-    const parent = router.options.routes.find(item => item.name === parentName)
-    if (parent) {
-        const existIndex = parent.children.findIndex(item => item.name === params.name)
-        if (existIndex < 0) {
-            parent.children.push(params);
-            router.matcher = new VueRouter().matcher;
-            router.addRoutes(router.options.routes)
-        } else {
-            parent.children.splice(existIndex, 1, params);
-            router.matcher = new VueRouter().matcher;
-            router.addRoutes(router.options.routes)
+
+function getParentByBrother(brotherName, parent) {
+    const brother = parent.children.find(item => item.name === brotherName)
+    if (brother) {
+        return parent
+    }
+    return null
+}
+
+router.selfAdd = (params, brotherName) => {
+    let parent = null
+    for (const item of router.options.routes) {
+        parent = getParentByBrother(brotherName, item)
+        if (parent) {
+            break
         }
+    }
+    if (!parent) {
+        parent = router.options.routes[0]
+    }
+    const existIndex = parent.children.findIndex(item => item.name === params.name)
+    if (existIndex < 0) {
+        parent.children.push(params);
+        router.matcher = new VueRouter().matcher;
+        router.addRoutes(router.options.routes)
     } else {
-        const existIndex = router.options.routes[0].children.findIndex(item => item.name === params.name)
-        if (existIndex < 0) {
-            router.options.routes[0].children.push(params);
-            router.matcher = new VueRouter().matcher;
-            router.addRoutes(router.options.routes)
-        } else {
-            router.options.routes[0].children.splice(existIndex, 1, params);
-            router.matcher = new VueRouter().matcher;
-            router.addRoutes(router.options.routes)
-        }
+        parent.children.splice(existIndex, 1, params);
+        router.matcher = new VueRouter().matcher;
+        router.addRoutes(router.options.routes)
     }
 }
 router.beforeEach((to, from, next) => {

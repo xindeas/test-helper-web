@@ -5,3 +5,10 @@ export function createCode (tableName) {
 export function getAllTable () {
     return instance.get('/table/get-all-table')
 }
+export function test () {
+    return instance({
+        method: 'post',
+        url: '/table/download',
+        responseType: 'blob',
+    })
+}
