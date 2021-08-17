@@ -44,7 +44,6 @@ instance.interceptors.request.use(
 // 回调拦截，自动拼装提示信息
 instance.interceptors.response.use(
     res => {
-        console.log(res);
         // data存在并且不是文件流
         if (res.data && !(res.data instanceof Blob) && !res.data.success) {
             Message.error(res.data.msg || '未知错误')

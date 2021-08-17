@@ -18,7 +18,7 @@
                  plain
                  :disabled="!tableName"
                  :loading="loading.button"
-                 @click="test"
+                 @click="download"
                  style="margin-left: 1em;"
                  icon="el-icon-plus">
         生成
@@ -43,7 +43,7 @@ import {
   Alert
 } from 'element-ui'
 import BaseTablePage from "@/base/BaseTablePage";
-import {getAllTable, createCode, test} from '@/service/TableService'
+import {getAllTable, download} from '@/service/TableService'
 import {ColumnType, OrderType} from "@/constant/ColumnItem";
 import { saveAs } from "file-saver";
 
@@ -123,20 +123,10 @@ export default {
         vm.loading.table = false
       })
     },
-    createCode() {
+    download() {
       this.showFlag = false;
       this.loading.button = true;
-      createCode(this.tableName).then(res => {
-        this.loading.button = false;
-        if (res.success) {
-          this.showFlag = true;
-        }
-      })
-    },
-    test() {
-      this.showFlag = false;
-      this.loading.button = true;
-      test(this.tableName).then(res => {
+      download(this.tableName).then(res => {
         this.loading.button = false;
         if (res && res.data) {
           let fileName = decodeURI(res.headers['content-disposition']);
