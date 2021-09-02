@@ -19,6 +19,7 @@ class messageUtil extends Message {
         let arr = document.getElementsByClassName('el-message')
         for (const item of arr) {
             const contents = item.getElementsByClassName('el-message__content')
+            console.log(contents, contents[0].innerHTML, options.message)
             if (contents && contents.length > 0 && contents[0].innerHTML === options.message) {
                 item['__vue__'].$parent.close();
             }

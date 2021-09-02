@@ -2,6 +2,7 @@ module.exports = {
     devServer: {
         host: 'localhost',
         port: '4300',
+        open: true
         // proxy: {
         //     "/user": {
         //         target: "http://localhost:4400",

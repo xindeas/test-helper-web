@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
 import VueCookies from 'vue-cookies'
 import {refreshUserCookie} from '@/utils/cookieUtil'
-import {Message} from 'element-ui';
+import messageUtil from "@/utils/messageUtil";
 import store from "@/store/index"
 import {MAX_TABS_NUM} from '@/utils/constant'
 
@@ -185,7 +185,7 @@ router.beforeEach((to, from, next) => {
     if (to.path !== '/Login' && !user) {
         // 存在path属性则代表本次路由是系统内执行的路由
         if (from.path !== '/') {
-            Message.error('太久未操作，请重新登录！')
+            messageUtil.error('太久未操作，请重新登录！')
         }
         next({
             path: '/Login'

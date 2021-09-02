@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui';
+import messageUtil from "@/utils/messageUtil";
 import VueCookies from "vue-cookies";
 import {refreshUserCookie} from "./cookieUtil";
 import router from '@/router'
@@ -26,9 +26,8 @@ instance.interceptors.request.use(
             refreshUserCookie(user)
             config.headers.Authorization = user.token
             return config;
-        }
-        else {
-            Message.error('太久未操作，请重新登录！')
+        } else {
+            messageUtil.error('太久未操作，请重新登录！')
             router.push('/Login')
             return Promise.reject({
                 response: {
@@ -46,7 +45,7 @@ instance.interceptors.response.use(
     res => {
         // data存在并且不是文件流
         if (res.data && !(res.data instanceof Blob) && !res.data.success) {
-            Message.error(res.data.msg || '未知错误')
+            messageUtil.error(res.data.msg || '未知错误')
             if (res.data.code.toString() === code.expired) {
                 router.push('/Login')
             }
